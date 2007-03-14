@@ -53,11 +53,11 @@ class LibertyTag extends LibertyBase {
 	function verify( &$pParamHash ) {
 		$pParamHash['tag_store'] = array();
 
-		// we're not doing anything if no tag is passed
 		if(!empty( $pParamHash['tag'])){	
 			$pParamHash['tag_store']['tag'] = $pParamHash['tag'];			
-		} else {
-			$this->mErrors['tag'] = "No tag given.";
+		}
+		if( !empty( $pParamHash['tag_id']) && is_numeric( $pParamHash['tag_id'])){	
+			$pParamHash['tag_store']['tag_id'] = $pParamHash['tag_id'];			
 		}
 		if( isset( $pParamHash['tagged_on']) ){	
 			$pParamHash['tag_store']['tagged_on'] = $pParamHash['tagged_on'];			
@@ -79,6 +79,38 @@ class LibertyTag extends LibertyBase {
 		return( count( $this->mErrors )== 0 );
 	}
 	
+	
+	/* check tag exists
+	 */
+	function verifyTag ( &$pParamHash ){
+		$ret = FALSE;
+		
+		$selectSql = ''; $joinSql = ''; $whereSql = '';	
+		$bindVars = array();
+		// if tag_id supplied, use that
+		if( !empty( $pParamHash['tag_id'] ) && is_numeric( $pParamHash['tag_id'] )) {		
+			$whereSql .= "WHERE tg.`tag_id` = ?";
+			$bindVars .= $pParamHash['tag_id'];
+		} isset( $pParamHash['tag_'] ) ) {
+			$whereSql .= "WHERE tg.`tag` = ?";
+			$bindVars .= $pParamHash['tag'];
+		}
+		
+		$query = "
+				SELECT tg.* 
+				FROM `".BIT_DB_PREFIX."tags` tg
+				$whereSql";
+		if ( $result = $this->mDb->getRow( $query, $bindVars ) ){
+			$pParamHash['tag_id'] = $result['tag_id'];
+			$this->mTagId = $result['tag'];
+			$ret = TRUE;
+		};
+		
+		return $ret;
+	}
+
+	
+	
 	/**
 	* @param array pParams hash of values that will be used to store the page
 	* @return bool TRUE on success, FALSE if store could not occur. If FALSE, $this->mErrors will have reason why
@@ -88,12 +120,11 @@ class LibertyTag extends LibertyBase {
 		if( $this->verify( $pParamHash ) ) {
 			$this->mDb->StartTrans();
 			if (!empty($pParamHash['tag_store'])) {
-				$pParamHash['tag_store']['tag_id'] = $this->mTagId;
 				$tagtable = BIT_DB_PREFIX."tags"; 
 				$maptable = BIT_DB_PREFIX."tags_content_map";
 				$this->mDb->StartTrans();				
 				
-				if( $this->mTagId ) {
+				if( $this->verifyTag($pParamHash['tag_store'])) {
 						$this->mDb->associateInsert( $maptable, $pParamHash['tag_store'] );
 				} else {
 					$pParamHash['tag_store']['tag_id'] = $this->mDb->GenID( 'tags_tag_id_seq' );
@@ -132,7 +163,7 @@ class LibertyTag extends LibertyBase {
 			}
 		}
 	
-		foreach( $tagMixed as $value ) {
+		foreach( $tagids as $value ) {
 			//how do we sanitize tags here? -wjames5
 			if( !empty($value) ) {
 				array_push( $pParamHash['map_store'], array( 
@@ -198,8 +229,8 @@ class LibertyTag extends LibertyBase {
 	function expungeContentFromTagMap(){
 		$ret = FALSE;
 		if( $this->isValid() ) {
-			$query_map = "DELETE FROM `".BIT_DB_PREFIX."tags_content_map` WHERE `content_id` = ?";			
-			$result = $this->mDb->query( $query_map, array( $this->mContentId ) );			
+			$query = "DELETE FROM `".BIT_DB_PREFIX."tags_content_map` WHERE `content_id` = ?";			
+			$result = $this->mDb->query( $query, array( $this->mContentId ) );			
 		}
 		return $ret;
 	}
@@ -209,6 +240,9 @@ class LibertyTag extends LibertyBase {
 	**/
 	function getList( &$pParamHash ) {
 		global $gBitUser, $gBitSystem;
+
+		$selectSql = ''; $joinSql = ''; $whereSql = '';	
+		$bindVars = array();
 
 		$sort_mode_prefix = 'lc';
 		if( empty( $pListHash['sort_mode'] ) ) {
