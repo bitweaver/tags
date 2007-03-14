@@ -277,7 +277,7 @@ class LibertyTag extends LibertyBase {
 
 /********* SERVICE FUNCTIONS *********/
 
-function tag_content_load_sql() {
+function tags_content_load_sql() {
 	global $gBitSystem;
 	$ret = array();
 	/* this isnt right -wjames5
@@ -291,7 +291,7 @@ function tag_content_load_sql() {
 /**
  * @param
  **/
-function tag_content_list_sql( &$pObject, $pParamHash=NULL ) {
+function tags_content_list_sql( &$pObject, $pParamHash=NULL ) {
 	global $gBitSystem;
 	$ret = array();
 	/* this isnt right -wjames5
@@ -318,7 +318,7 @@ function tag_content_list_sql( &$pObject, $pParamHash=NULL ) {
 /**
  * @param includeds a string or array of 'tags' and contentid for association.
  **/
-function tag_content_store( &$pObject, &$pParamHash ) {
+function tags_content_store( &$pObject, &$pParamHash ) {
 	global $gBitSystem;
 	$errors = NULL;
 	// If a content access system is active, let's call it
@@ -331,7 +331,7 @@ function tag_content_store( &$pObject, &$pParamHash ) {
 	return( $errors );
 }
 
-function tag_content_preview( &$pObject) {
+function tags_content_preview( &$pObject) {
 	global $gBitSystem;
 	if ( $gBitSystem->isPackageActive( 'tags' ) ) {		
 		if (isset($_REQUEST['tags'])) {
@@ -340,7 +340,7 @@ function tag_content_preview( &$pObject) {
 	}
 }
 
-function tag_content_expunge( &$pObject ) {
+function tags_content_expunge( &$pObject ) {
 	$tag = new LibertyTag( $pObject->mContentId );
 	$tag->expungeContentFromTagMap();
 }
