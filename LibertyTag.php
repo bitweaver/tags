@@ -310,44 +310,50 @@ class LibertyTag extends LibertyBase {
 }
 
 /********* SERVICE FUNCTIONS *********/
+function tags_content_display( &$pObject ) {
+	global $gBitSystem, $gBitSmarty, $gBitUser, $gPreviewStyle;
+	if ( $gBitSystem->isPackageActive( 'tags' ) ) {
+		$tag = new LibertyTag( $pObject->mContentId );
+		if( $gBitUser->hasPermission( 'p_tags_view' ) ) {		
+			if( $tagData = $tag->load() ) {
+				$gBitSmarty->assign( 'tagData', !empty( $tagData ) ? $tagData : FALSE );
+			}
+		}
+	}	
+}
 
-function tags_content_load_sql() {
-	global $gBitSystem;
-	$ret = array();
-	/* this isnt right -wjames5
-	$ret['select_sql'] = " , tgc.`tag_id`, tgc.`tagger_id`, tgc.`tagged_on`, tg.`tag`";
-	$ret['join_sql'] = " 
-			LEFT JOIN `".BIT_DB_PREFIX."tags_content_map` tgc ON ( lc.`content_id`=tgc.`content_id` )
-			LEFT JOIN `".BIT_DB_PREFIX."tags` tg ON ( tg.`tag_id`=tgc.`tag_id` )";
-	*/
-	return $ret;
-}
 /**
- * @param
+ * filter the search with pigeonholes
+ * @param $pParamHash['tags']['filter'] - a tag or an array of tags
  **/
-function tags_content_list_sql( &$pObject, $pParamHash=NULL ) {
+/*
+function tags_content_list_sql( &$pObject, $pParamHash = NULL ) {
 	global $gBitSystem;
 	$ret = array();
-	/* this isnt right -wjames5
-	$ret['select_sql'] = " , tag.`lat`, tag.`lng`, tag.`amsl`, tag.`amsl_unit`"; 
-	$ret['join_sql'] = " LEFT JOIN `".BIT_DB_PREFIX."tag` tag ON ( lc.`content_id`=tag.`content_id` )";
-	if (isset($pParamHash['up_lat']) && isset($pParamHash['right_lng']) && isset($pParamHash['down_lat']) && isset($pParamHash['left_lng']) ) {	
-	  if ($pParamHash['left_lng'] < $pParamHash['right_lng']){	
-		  $ret['where_sql'] = ' AND tag.`lng` >= ? AND tag.`lng` <= ? AND tag.`lat` <= ? AND tag.`lat` >= ? ';
-		}else{
-		  $ret['where_sql'] = ' AND ( tag.`lng` >= ? OR tag.`lng` <= ? ) AND tag.`lat` <= ? AND tag.`lat` >= ? ';
-    }
-		$ret['bind_vars'][] = $pParamHash['left_lng'];
-		$ret['bind_vars'][] = $pParamHash['right_lng'];
-		$ret['bind_vars'][] = $pParamHash['up_lat'];
-		$ret['bind_vars'][] = $pParamHash['down_lat'];
+	if( !empty( $pParamHash['tags']['filter'] ) ) {
+		if ( is_array( $pParamHash['tags']['filter'] ) ) {
+			$ret['join_sql'] = "LEFT JOIN `".BIT_DB_PREFIX."tag_members` pm ON (lc .`content_id`= pm.`content_id`)";
+			$ret['where_sql'] = ' AND pm.`parent_id` in ('.implode( ',', array_fill(0, count( $pParamHash['tags']['filter']  ), '?' ) ).')';
+			$ret['bind_vars'] = $pParamHash['tags']['filter'];
+		} else {
+			$ret['join_sql'] = "LEFT JOIN `".BIT_DB_PREFIX."tag_members` pm ON (lc .`content_id`= pm.`content_id`)";
+			$ret['where_sql'] = " AND pm.`parent_id`=? ";
+			$ret['bind_vars'][] = $pParamHash['tags']['filter'];
+		}
 	}
-    if (isset($pParamHash['tag_notnull'])){
-		$ret['where_sql'] = ' AND tag.`lng` IS NOT NULL AND tag.`lng` IS NOT NULL ';
-    }
-    */
+	if( !empty( $pParamHash['liberty_categories'] ) ) {
+			$ret['join_sql'] = "LEFT JOIN `".BIT_DB_PREFIX."tag_members` pm ON (lc .`content_id`= pm.`content_id`)";
+		if ( is_array( $pParamHash['liberty_categories'] ) ) {
+			$ret['where_sql'] = ' AND pm.`parent_id` in ('.implode( ',', array_fill(0, count( $pParamHash['liberty_categories']  ), '?' ) ).')';
+			$ret['bind_vars'] = $pParamHash['liberty_categories'];
+		} else {
+			$ret['where_sql'] = " AND pm.`parent_id`=? ";
+			$ret['bind_vars'][] = $pParamHash['liberty_categories'];
+		}
+	}
 	return $ret;
 }
+*/
 
 /**
  * @param includeds a string or array of 'tags' and contentid for association.
