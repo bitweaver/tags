@@ -38,8 +38,15 @@ class LibertyTag extends LibertyBase {
 					SELECT tgc.*, tg.* 
 					FROM `".BIT_DB_PREFIX."tags_content_map` tgc
 						INNER JOIN `".BIT_DB_PREFIX."tags` tg ON tg.`tag_id` = tgc.`tag_id`
-					WHERE tgc.`content_id`=?";					
-			$this->mInfo = $this->mDb->getRow( $query, array( $this->mContentId ) );
+					WHERE tgc.`content_id`=?";
+					
+			//$this->mInfo = $this->mDb->query( $query, array( $this->mContentId ) );
+			$result = $this->mDb->query( $query, array( $this->mContentId ) );
+			$ret = array();
+			while ($res = $result->fetchRow()) {
+				$ret[] = $res;
+			}
+			$this->mInfo['tags'] = $ret;							
 		}
 		return( count( $this->mInfo ) );
 	}
@@ -320,19 +327,12 @@ class LibertyTag extends LibertyBase {
 
 /********* SERVICE FUNCTIONS *********/
 function tags_content_display( &$pObject ) {
-	global $gBitSystem, $gBitSmarty, $gBitUser, $gPreviewStyle;
+	global $gBitSystem, $gBitSmarty, $gBitUser;
 	if ( $gBitSystem->isPackageActive( 'tags' ) ) {
 		$tag = new LibertyTag( $pObject->mContentId );
 		if( $gBitUser->hasPermission( 'p_tags_view' ) ) {		
-			if( $tags = $tag->load() ) {
-				//loop through results and piece together tags.
-				$tagData = "";
-				$count = sizeof($tags);
-				for($n=0; $n<$count; $n++){
-					$tagData .= $tags[$n]['tag'];
-					$tagData .= ($n < $count-1)? ", ":"";
-				}
-				$gBitSmarty->assign( 'tagData', !empty( $tagData ) ? $tagData : FALSE );
+			if( $tag->load() ) {
+				$gBitSmarty->assign( 'tagData', !empty( $tag->mInfo['tags'] ) ? $tag->mInfo['tags'] : NULL );
 			}
 		}
 	}	
