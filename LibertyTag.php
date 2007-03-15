@@ -253,9 +253,9 @@ class LibertyTag extends LibertyBase {
 		$selectSql = ''; $joinSql = ''; $whereSql = '';	
 		$bindVars = array();
 
-		$sort_mode_prefix = 'lc';
+		$sort_mode_prefix = 'tg';
 		if( empty( $pParamHash['sort_mode'] ) ) {
-			$pParamHash['sort_mode'] = 'title_desc';
+			$pParamHash['sort_mode'] = 'tag_desc';
 		}
 
 		/**
@@ -289,7 +289,7 @@ class LibertyTag extends LibertyBase {
 			FROM `".BIT_DB_PREFIX."tags` tg
 				$joinSql";
 		
-		$result = $this->mDb->query($query,$bindVars,$pParamHash['max_records'],$pParamHash['offset']);
+		$result = $this->mDb->query($query,$bindVars);
 		$cant = $this->mDb->getOne($query_cant,$bindVars);
 		$ret = array();
 
