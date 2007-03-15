@@ -91,23 +91,23 @@ class LibertyTag extends LibertyBase {
 	/* check tag exists
 	 */
 	function verifyTag ( &$pParamHash ){
-		$ret = FALSE;
-		
+		$ret = FALSE;		
 		$selectSql = ''; $joinSql = ''; $whereSql = '';	
 		$bindVars = array();
 		// if tag_id supplied, use that
 		if( !empty( $pParamHash['tag_id'] ) && is_numeric( $pParamHash['tag_id'] )) {		
 			$whereSql .= "WHERE tg.`tag_id` = ?";
-			$bindVars .= $pParamHash['tag_id'];
-		}elseif( isset( $pParamHash['tag_'] ) ) {
+			$bindVars[] = $pParamHash['tag_id'];
+		}elseif( isset( $pParamHash['tag'] ) ) {
 			$whereSql .= "WHERE tg.`tag` = ?";
-			$bindVars .= $pParamHash['tag'];
+			$bindVars[] = $pParamHash['tag'];
 		}
 		
 		$query = "
 				SELECT tg.* 
 				FROM `".BIT_DB_PREFIX."tags` tg
 				$whereSql";
+				
 		if ( $result = $this->mDb->getRow( $query, $bindVars ) ){
 			$pParamHash['tag_id'] = $result['tag_id'];
 			$this->mTagId = $result['tag'];
@@ -132,8 +132,9 @@ class LibertyTag extends LibertyBase {
 				$maptable = BIT_DB_PREFIX."tags_content_map";
 				$this->mDb->StartTrans();				
 				
-				if( $this->verifyTag($pParamHash['tag_map_store'])) {
-						$this->mDb->associateInsert( $maptable, $pParamHash['tag_map_store'] );
+				if( $this->verifyTag($pParamHash['tag_store']) ) {
+					$pParamHash['tag_map_store']['tag_id'] = $pParamHash['tag_store']['tag_id'];
+					$this->mDb->associateInsert( $maptable, $pParamHash['tag_map_store'] );
 				} else {
 					$pParamHash['tag_store']['tag_id'] = $this->mDb->GenID( 'tags_tag_id_seq' );
 					if ( $this->mDb->associateInsert( $tagtable, $pParamHash['tag_store'] ) ){
