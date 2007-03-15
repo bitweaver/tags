@@ -245,8 +245,8 @@ class LibertyTag extends LibertyBase {
 		$bindVars = array();
 
 		$sort_mode_prefix = 'lc';
-		if( empty( $pListHash['sort_mode'] ) ) {
-			$pListHash['sort_mode'] = 'title_desc';
+		if( empty( $pParamHash['sort_mode'] ) ) {
+			$pParamHash['sort_mode'] = 'title_desc';
 		}
 
 		/**
@@ -278,7 +278,7 @@ class LibertyTag extends LibertyBase {
 		}	
 		*/
 
-		$sort_mode = $sort_mode_prefix . '.' . $this->mDb->convertSortmode( $pListHash['sort_mode'] ); 
+		$sort_mode = $sort_mode_prefix . '.' . $this->mDb->convertSortmode( $pParamHash['sort_mode'] ); 
 
 		// get all tags
 		$query = "
@@ -315,7 +315,14 @@ function tags_content_display( &$pObject ) {
 	if ( $gBitSystem->isPackageActive( 'tags' ) ) {
 		$tag = new LibertyTag( $pObject->mContentId );
 		if( $gBitUser->hasPermission( 'p_tags_view' ) ) {		
-			if( $tagData = $tag->load() ) {
+			if( $tags = $tag->load() ) {
+				//loop through results and piece together tags.
+				$tagData = "";
+				$count = $tags.length;
+				for($n=0; $n<$count; n++){
+					$tagData .= $tags[$n]['tag'];
+					$tagData .= ($n < $count-1)? ", ":"";
+				}
 				$gBitSmarty->assign( 'tagData', !empty( $tagData ) ? $tagData : FALSE );
 			}
 		}

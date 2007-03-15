@@ -15,5 +15,6 @@ if( $gBitSystem->isPackageActive( 'tags' ) ) {
                 'content_store_function'  => 'tags_content_store',
                 'content_preview_function'  => 'tags_content_preview',
                 'content_expunge_function'  => 'tags_content_expunge',
+				'content_edit_mini_tpl' => 'bitpackage:tags/edit_tags_mini_inc.tpl',
         ) );
 }?>
