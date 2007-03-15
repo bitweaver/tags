@@ -7,9 +7,9 @@ $registerHash = array(
 $gBitSystem->registerPackage( $registerHash );
 
 if( $gBitSystem->isPackageActive( 'tags' ) ) {
-        require_once( GEO_PKG_PATH.'LibertyTag.php' );
+        require_once( TAGS_PKG_PATH.'LibertyTag.php' );
 
-        $gLibertySystem->registerService( LIBERTY_SERVICE_GEO, GEO_PKG_NAME, array(
+        $gLibertySystem->registerService( LIBERTY_SERVICE_TAGS, TAGS_PKG_NAME, array(
         		'content_display_function' => 'tags_content_display',
                 'content_list_sql_function' => 'tags_content_list_sql',
                 'content_store_function'  => 'tags_content_store',

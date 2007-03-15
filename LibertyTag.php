@@ -52,26 +52,27 @@ class LibertyTag extends LibertyBase {
 	**/
 	function verify( &$pParamHash ) {
 		$pParamHash['tag_store'] = array();
+		$pParamHash['tag_map_store'] = array();
 
 		if(!empty( $pParamHash['tag'])){	
 			$pParamHash['tag_store']['tag'] = $pParamHash['tag'];			
 		}
 		if( !empty( $pParamHash['tag_id']) && is_numeric( $pParamHash['tag_id'])){	
-			$pParamHash['tag_store']['tag_id'] = $pParamHash['tag_id'];			
+			$pParamHash['tag_map_store']['tag_id'] = $pParamHash['tag_id'];			
 		}
 		if( isset( $pParamHash['tagged_on']) ){	
-			$pParamHash['tag_store']['tagged_on'] = $pParamHash['tagged_on'];			
+			$pParamHash['tag_map_store']['tagged_on'] = $pParamHash['tagged_on'];			
 		} else {
-			$pParamHash['tag_store']['tagged_on'] = $gBitSystem->getUTCTime();
+			$pParamHash['tag_map_store']['tagged_on'] = $gBitSystem->getUTCTime();
 		}
 		if( @$this->verifyId( $pParamHash['content_id']) ){	
-			$pParamHash['tag_store']['content_id'] = $pParamHash['content_id'];			
+			$pParamHash['tag_map_store']['content_id'] = $pParamHash['content_id'];			
 		} else {
 			$this->mErrors['content_id'] = "No content id specified.";
 		}
 		// is this the best way to associate a user_id? should it even be included? -wjames5
 		if( @$this->verifyId( $pParamHash['user_id']) ){	
-			$pParamHash['tag_store']['tagger_id'] = $pParamHash['user_id'];			
+			$pParamHash['tag_map_store']['tagger_id'] = $pParamHash['user_id'];			
 		} else {
 			$this->mErrors['user_id'] = "No user id specified.";
 		}
@@ -91,7 +92,7 @@ class LibertyTag extends LibertyBase {
 		if( !empty( $pParamHash['tag_id'] ) && is_numeric( $pParamHash['tag_id'] )) {		
 			$whereSql .= "WHERE tg.`tag_id` = ?";
 			$bindVars .= $pParamHash['tag_id'];
-		} isset( $pParamHash['tag_'] ) ) {
+		}elseif( isset( $pParamHash['tag_'] ) ) {
 			$whereSql .= "WHERE tg.`tag` = ?";
 			$bindVars .= $pParamHash['tag'];
 		}
@@ -124,13 +125,13 @@ class LibertyTag extends LibertyBase {
 				$maptable = BIT_DB_PREFIX."tags_content_map";
 				$this->mDb->StartTrans();				
 				
-				if( $this->verifyTag($pParamHash['tag_store'])) {
-						$this->mDb->associateInsert( $maptable, $pParamHash['tag_store'] );
+				if( $this->verifyTag($pParamHash['tag_map_store'])) {
+						$this->mDb->associateInsert( $maptable, $pParamHash['tag_map_store'] );
 				} else {
 					$pParamHash['tag_store']['tag_id'] = $this->mDb->GenID( 'tags_tag_id_seq' );
 					if ( $this->mDb->associateInsert( $tagtable, $pParamHash['tag_store'] ) ){
-						$this->mDb->associateInsert( $maptable, $pParamHash['tag_store'] );
-						$this->mTagId = $pParamHash['tag_store']['tag_id'];
+						$this->mTagId = $pParamHash['tag_map_store']['tag_id'] = $pParamHash['tag_store']['tag_id'];
+						$this->mDb->associateInsert( $maptable, $pParamHash['tag_map_store'] );
 					}
 				}
 			}
@@ -163,14 +164,14 @@ class LibertyTag extends LibertyBase {
 			}
 		}
 	
-		foreach( $tagids as $value ) {
+		foreach( $tagIds as $value ) {
 			//how do we sanitize tags here? -wjames5
 			if( !empty($value) ) {
 				array_push( $pParamHash['map_store'], array( 
 					'tag' => $value, 
 					'tagged_on' => $timeStamp,
-					'content_id' => $this->$mContentId, 
-					'user_id' => $this->$mUserId, 
+					'content_id' => $this->mContentId, 
+					'user_id' => $gBitUser->mUserId, 
 				));
 			} else {
 				$this->mErrors[$value] = "Invalid tag.";
@@ -326,8 +327,8 @@ function tags_content_display( &$pObject ) {
 			if( $tags = $tag->load() ) {
 				//loop through results and piece together tags.
 				$tagData = "";
-				$count = $tags.length;
-				for($n=0; $n<$count; n++){
+				$count = sizeof($tags);
+				for($n=0; $n<$count; $n++){
 					$tagData .= $tags[$n]['tag'];
 					$tagData .= ($n < $count-1)? ", ":"";
 				}
