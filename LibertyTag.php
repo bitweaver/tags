@@ -254,24 +254,11 @@ class LibertyTag extends LibertyBase {
 		* and these are just sketches - need to be different kinds of queries in most cases
 		**/
 		/*
-		// get all tags limited by content_id
-		if( @$this->verifyId( $pParamHash['content_id'] ) ) {
-			$selectSql =,"tgc.*, lc.*";
-			$joinSql .=	" 
-						INNER JOIN `".BIT_DB_PREFIX."tags_content_map` tgc ON tg.`tag_id`= tgc.`tag_id`
-						INNER JOIN      `".BIT_DB_PREFIX."liberty_content`       lc ON lc.`content_id`         = tgc.`content_id`";
-			$whereSql .= " AND tgc.`content_id` = ? ";
-			$bindVars[] = $pParamHash['content_id'];
-		} 
-		
 		// get tags by most hits on content
 		if ($pParamHash['sort_mode'] == 'hits_desc') {
 			$joinSql .=	"LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_content_hits` lch ON lc.`content_id`         = lch.`content_id`";
 		}
-		// get tags by map use count
-		if ($pParamHash['sort_mode'] == 'cant_desc') {
-			$sort_mode_prefix = 'tgc';
-		}	
+
 		// get tags	sorted by tagged date			<- getList sorted by map tagged date
 		if ($pParamHash['sort_mode'] == 'tagged_on_desc') {
 			$sort_mode_prefix = 'tgc';
@@ -299,6 +286,16 @@ class LibertyTag extends LibertyBase {
 
 		$comment = &new LibertyComment();
 		while ($res = $result->fetchRow()) {
+			$res['popcant'] = $this->getPopCount($res['tag_id']);
+			$ret[] = $res;
+		}
+		
+		//if the user has asked to sort the tags by use we sort the array before returning it
+		if ($pParamHash['sort_mode'] == 'cant_desc') {
+			foreach ($ret as $key => $row) {
+			   $popcant[$key]  = $row['popcant'];
+			}			
+			array_multisort($popcant, SORT_DESC, $ret);		
 		}
 		
 		$pParamHash["data"] = $ret;
@@ -306,6 +303,17 @@ class LibertyTag extends LibertyBase {
 
 		return $pParamHash;
 	}	
+	
+	/**
+	* This function gets the number of times a tag is used aka Popularity Count
+	**/
+	function getPopCount($tag_id){
+		$query_cant = "
+			SELECT COUNT( * ) 
+			FROM `".BIT_DB_PREFIX."tags_content_map` tgc
+			WHERE tgc.`tag_id` = ?";
+		$cant = $this->mDb->getOne($query_cant, array($tag_id) );
+	}
 	
 }
 
