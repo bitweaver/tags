@@ -18,6 +18,7 @@ if( $gBitSystem->isPackageActive( 'tags' ) ) {
 
 	$gLibertySystem->registerService( LIBERTY_SERVICE_TAGS, TAGS_PKG_NAME, array(
 			'content_display_function' 	=> 'tags_content_display',
+			'content_edit_function' 	=> 'tags_content_edit',
 			'content_list_sql_function' => 'tags_content_list_sql',
 			'content_store_function'  	=> 'tags_content_store',
 			'content_preview_function'  => 'tags_content_preview',

@@ -403,7 +403,6 @@ function tags_content_display( &$pObject ) {
  * filter the search with pigeonholes
  * @param $pParamHash['tags']['filter'] - a tag or an array of tags
  **/
-
 function tags_content_list_sql( &$pObject, $pParamHash = NULL ) {
 	global $gBitSystem;
 	$ret = array();
@@ -432,6 +431,17 @@ function tags_content_list_sql( &$pObject, $pParamHash = NULL ) {
 	return $ret;
 }
 
+function tags_content_edit( $pObject=NULL ) {
+	global $gBitSystem, $gBitSmarty, $gBitUser;
+	if ( $gBitSystem->isPackageActive( 'tags' ) ) {
+		$tag = new LibertyTag( $pObject->mContentId );
+		if( $gBitUser->hasPermission( 'p_tags_view' ) ) {		
+			if( $tag->load() ) {
+				$gBitSmarty->assign( 'tagData', !empty( $tag->mInfo['tags'] ) ? $tag->mInfo['tags'] : NULL );
+			}
+		}
+	}	
+}
 
 /**
  * @param includeds a string or array of 'tags' and contentid for association.
