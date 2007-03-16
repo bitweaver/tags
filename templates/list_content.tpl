@@ -51,6 +51,10 @@
 		
 		{pagination}
 		{/strip}
+	<div class="header">
+		<h1>{tr}Tags{/tr}</h1>
+	</div>
+		{include file="bitpackage:tags/tags_cloud.tpl"}
 	</div><!-- end .body -->
 </div><!-- end .liberty -->
 {/strip}

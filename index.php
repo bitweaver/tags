@@ -7,9 +7,12 @@ $gBitSystem->verifyPackage( 'tags' );
 $tag = new LibertyTag();
 
 $listHash = $_REQUEST;
+$tagHash = $_REQUEST;
 
 if( isset($_REQUEST['tags']) ){
 	$listData = $tag->getContentList( $listHash );
+	$tagData = $tag->getList( $tagHash );
+	$gBitSmarty->assign( 'tagData', $tagData["data"] );
 	$gBitSmarty->assign( 'tagsReq', $_REQUEST['tags'] );
 	$gBitSystem->display( 'bitpackage:tags/list_content.tpl', tra( 'Tagged Content' ) );
 }else{
