@@ -298,15 +298,38 @@ class LibertyTag extends LibertyBase {
 			$res['popcant'] = $this->getPopCount($res['tag_id']);
 			$ret[] = $res;
 		}
-		
-		//if the user has asked to sort the tags by use we sort the array before returning it
-		if ( isset($_REQUEST['sort']) && $_REQUEST['sort']=='mostpopular' ) {
-			foreach ($ret as $key => $row) {
-			   $popcant[$key]  = $row['popcant'];
-			}			
-			array_multisort($popcant, SORT_DESC, $ret);		
+
+		//get keys for doing sorts		
+		foreach ($ret as $key => $row) {
+		   $popcant[$key]  = $row['popcant'];
+		   $orderedcant[$key]  = $row['popcant'];
 		}
 		
+				//get highest count and get lowest count
+				sort($orderedcant);
+				$lowcant = $orderedcant[0];
+				$highcant = $orderedcant[ (count($orderedcant) - 1) ];
+				//rescore
+				//1.  High-low = x		
+				$cantoffset = $highcant - $lowcant;
+				//2.  ratio 9/x
+				if ($cantoffset > 9){
+					$tagscale = 9/$cantoffset;
+				}else{
+					//@todo make this more sophisticated if the spread is not big enough
+					$tagscale = 9/$cantoffset;
+				}
+				//3.  (n - low)*ratio  (# to be scaled)
+
+				foreach ($ret as $key => $row) {
+					$ret[$key]['tagscale']  = round( (($row['popcant'] - $lowcant) * $tagscale),0);
+				}
+						
+		//if the user has asked to sort the tags by use we sort the array before returning it
+		if ( isset($_REQUEST['sort']) && $_REQUEST['sort']=='mostpopular' ) {
+			array_multisort($popcant, SORT_DESC, $ret);		
+		}
+
 		$pParamHash["data"] = $ret;
 		$pParamHash["cant"] = $cant;
 
