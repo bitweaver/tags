@@ -325,11 +325,52 @@ class LibertyTag extends LibertyBase {
 		return $cant;
 	}
 
+	/**
+	* This function gets all content by matching to any tag passed in a group of tags, eliminates dupe records
+	**/
 	function getContentList(&$pParamHash){
 		global $gBitSystem, $gBitSmarty;
 		$_REQUEST['output'] = 'raw';
 		include_once( LIBERTY_PKG_PATH.'list_content.php' );
-		$gBitSmarty->assign_by_ref('listcontent', $contentList["data"]);
+		$distinctdata = $this->array_distinct( $contentList["data"], 'content_id' );
+		$distinctdata = array_merge($distinctdata);
+		$gBitSmarty->assign_by_ref('contentList', $distinctdata);
+	}
+
+
+	/**
+	* Used by getContentList to strip out duplicate records in a list
+	**/
+	function array_distinct ($array, $group_keys, $sum_keys = NULL, $count_key = NULL){
+	  if (!is_array ($group_keys)) $group_keys = array ($group_keys);
+	  if (!is_array ($sum_keys)) $sum_keys = array ($sum_keys);
+	
+	  $existing_sub_keys = array ();
+	  $output = array ();
+	
+	  foreach ($array as $key => $sub_array){
+	   $puffer = NULL;
+	   #group keys
+	   foreach ($group_keys as $group_key){
+		 $puffer .= $sub_array[$group_key];
+	   }
+	   $puffer = serialize ($puffer);
+	   if (!in_array ($puffer, $existing_sub_keys)){
+		 $existing_sub_keys[$key] = $puffer;
+		 $output[$key] = $sub_array;
+	   }
+	   else{
+		 $puffer = array_search ($puffer, $existing_sub_keys);
+		 #sum keys
+		 foreach ($sum_keys as $sum_key){
+		   if (is_string ($sum_key)) $output[$puffer][$sum_key] += $sub_array[$sum_key];
+		 }
+		 #count grouped keys
+		 if (!array_key_exists ($count_key, $output[$puffer])) $output[$puffer][$count_key] = 1;
+		 if (is_string ($count_key)) $output[$puffer][$count_key]++;
+	   }
+	  }
+	  return $output;
 	}
 	
 }
@@ -357,7 +398,7 @@ function tags_content_list_sql( &$pObject, $pParamHash = NULL ) {
 	$ret = array();
 
 	if (isset($pParamHash['tags'])){
-		$ret['select_sql'] = " , tgc.`tag_id`, tgc.`tagger_id`, tgc.`tagged_on`"; 
+		$ret['select_sql'] = ", tgc.`tag_id`, tgc.`tagger_id`, tgc.`tagged_on`"; 
 		$ret['join_sql'] = " INNER JOIN `".BIT_DB_PREFIX."tags_content_map` tgc ON ( lc.`content_id`=tgc.`content_id` )
 							 INNER JOIN `".BIT_DB_PREFIX."tags` tg ON ( tg.`tag_id`=tgc.`tag_id` )";
 						 

@@ -13,7 +13,6 @@
 				{forminput}
 					<input type="text" name="tags" value="{$listInfo.tags}" />
 					<input type="submit" value="{tr}Search{/tr}" name="search_objects" />
-					{formhelp note="Search again by tags."}
 				{/forminput}
 			</div>
 		{/form}
