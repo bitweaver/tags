@@ -17,6 +17,8 @@
 				{/if}
 			</ul>
 		*}
+		<a href="{$smarty.const.TAGS_PKG_URL}index.php?sort=mostpopular">Sort by most popular</a>
+		<a href="{$smarty.const.TAGS_PKG_URL}index.php">Sort alphabeticaly</a>
 		</div>
 
 		<div class="clear"></div>

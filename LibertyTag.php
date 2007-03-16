@@ -255,7 +255,7 @@ class LibertyTag extends LibertyBase {
 
 		$sort_mode_prefix = 'tg';
 		if( empty( $pParamHash['sort_mode'] ) ) {
-			$pParamHash['sort_mode'] = 'tag_desc';
+			$pParamHash['sort_mode'] = 'tag_asc';
 		}
 
 		/**
@@ -300,7 +300,7 @@ class LibertyTag extends LibertyBase {
 		}
 		
 		//if the user has asked to sort the tags by use we sort the array before returning it
-		if ($pParamHash['sort_mode'] == 'cant_desc') {
+		if ( isset($_REQUEST['sort']) && $_REQUEST['sort']=='mostpopular' ) {
 			foreach ($ret as $key => $row) {
 			   $popcant[$key]  = $row['popcant'];
 			}			
@@ -322,6 +322,14 @@ class LibertyTag extends LibertyBase {
 			FROM `".BIT_DB_PREFIX."tags_content_map` tgc
 			WHERE tgc.`tag_id` = ?";
 		$cant = $this->mDb->getOne($query_cant, array($tag_id) );
+		return $cant;
+	}
+
+	function getContentList(&$pParamHash){
+		global $gBitSystem, $gBitSmarty;
+		$_REQUEST['output'] = 'raw';
+		include_once( LIBERTY_PKG_PATH.'list_content.php' );
+		$gBitSmarty->assign_by_ref('listcontent', $contentList["data"]);
 	}
 	
 }
@@ -343,34 +351,35 @@ function tags_content_display( &$pObject ) {
  * filter the search with pigeonholes
  * @param $pParamHash['tags']['filter'] - a tag or an array of tags
  **/
-/*
+
 function tags_content_list_sql( &$pObject, $pParamHash = NULL ) {
 	global $gBitSystem;
 	$ret = array();
-	if( !empty( $pParamHash['tags']['filter'] ) ) {
-		if ( is_array( $pParamHash['tags']['filter'] ) ) {
-			$ret['join_sql'] = "LEFT JOIN `".BIT_DB_PREFIX."tag_members` pm ON (lc .`content_id`= pm.`content_id`)";
-			$ret['where_sql'] = ' AND pm.`parent_id` in ('.implode( ',', array_fill(0, count( $pParamHash['tags']['filter']  ), '?' ) ).')';
-			$ret['bind_vars'] = $pParamHash['tags']['filter'];
-		} else {
-			$ret['join_sql'] = "LEFT JOIN `".BIT_DB_PREFIX."tag_members` pm ON (lc .`content_id`= pm.`content_id`)";
-			$ret['where_sql'] = " AND pm.`parent_id`=? ";
-			$ret['bind_vars'][] = $pParamHash['tags']['filter'];
+
+	if (isset($pParamHash['tags'])){
+		$ret['select_sql'] = " , tgc.`tag_id`, tgc.`tagger_id`, tgc.`tagged_on`"; 
+		$ret['join_sql'] = " INNER JOIN `".BIT_DB_PREFIX."tags_content_map` tgc ON ( lc.`content_id`=tgc.`content_id` )
+							 INNER JOIN `".BIT_DB_PREFIX."tags` tg ON ( tg.`tag_id`=tgc.`tag_id` )";
+						 
+		$tagMixed = $pParamHash['tags']; //need to break up this string
+		if( !empty( $tagMixed )){
+			if (!is_array( $tagMixed ) && !is_numeric( $tagMixed ) ){
+				$tagIds = explode( ",", $tagMixed );
+			}else if ( is_array( $tagMixed ) ) {
+				$tagIds = $tagMixed;
+			}else if ( is_numeric( $tagMixed ) ) {
+				$tagIds = array( $tagMixed );
+			}
 		}
+						 
+		$ret['where_sql'] = ' AND tg.`tag` IN ('.implode( ',', array_fill(0, count( $tagIds ), '?' ) ).')';
+		
+		$ret['bind_vars'] = $tagIds;
 	}
-	if( !empty( $pParamHash['liberty_categories'] ) ) {
-			$ret['join_sql'] = "LEFT JOIN `".BIT_DB_PREFIX."tag_members` pm ON (lc .`content_id`= pm.`content_id`)";
-		if ( is_array( $pParamHash['liberty_categories'] ) ) {
-			$ret['where_sql'] = ' AND pm.`parent_id` in ('.implode( ',', array_fill(0, count( $pParamHash['liberty_categories']  ), '?' ) ).')';
-			$ret['bind_vars'] = $pParamHash['liberty_categories'];
-		} else {
-			$ret['where_sql'] = " AND pm.`parent_id`=? ";
-			$ret['bind_vars'][] = $pParamHash['liberty_categories'];
-		}
-	}
+
 	return $ret;
 }
-*/
+
 
 /**
  * @param includeds a string or array of 'tags' and contentid for association.
