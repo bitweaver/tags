@@ -332,15 +332,26 @@ class LibertyTag extends LibertyBase {
 		global $gBitSystem, $gBitSmarty;
 		$_REQUEST['output'] = 'raw';
 		include_once( LIBERTY_PKG_PATH.'list_content.php' );
-		$distinctdata = $this->array_distinct( $contentList["data"], 'content_id' );
-		$distinctdata = array_merge($distinctdata);
+		if ( isset($pParamHash['matchtags']) && $pParamHash['matchtags'] == 'all'){
+			//need some sort of matching function
+		}else{
+			//match on any tags
+			$distinctdata = $this->array_distinct( $contentList["data"], 'content_id' );
+			$distinctdata = array_merge($distinctdata);
+		}
 		$gBitSmarty->assign_by_ref('contentList', $distinctdata);
 	}
 
 
 	/**
 	* Used by getContentList to strip out duplicate records in a list
-	**/
+	* Lifted from http://us3.php.net/manual/en/function.array-unique.php#57006
+	* 
+	* @$array - nothing to say
+	* @$group_keys - columns which have to be grouped - can be STRING or ARRAY (STRING, STRING[, ...])
+	* @$sum_keys - columns which have to be summed - can be STRING or ARRAY (STRING, STRING[, ...])
+	* @$count_key - must be STRING - count the grouped keys
+	*/
 	function array_distinct ($array, $group_keys, $sum_keys = NULL, $count_key = NULL){
 	  if (!is_array ($group_keys)) $group_keys = array ($group_keys);
 	  if (!is_array ($sum_keys)) $sum_keys = array ($sum_keys);

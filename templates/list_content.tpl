@@ -29,12 +29,12 @@
 		<table class="data">
 			<caption>{tr}Available Content{/tr} <span class="total">[ {$listInfo.total_records} ]</span></caption>
 			<tr>
-				<th style="width:2%;">{smartlink ititle="ID" isort=content_id list_page=$listInfo.current_page user_id=$user_id content_type_guid=$contentSelect find=$listInfo.find}</th>
-				<th>{smartlink ititle="Title" isort=title list_page=$listInfo.current_page user_id=$user_id content_type_guid=$contentSelect find=$listInfo.find idefault=1}</th>
-				<th>{smartlink ititle="Content Type" isort=content_type_guid list_page=$listInfo.current_page user_id=$user_id content_type_guid=$contentSelect find=$listInfo.find}</th>
-				<th>{smartlink ititle="Author" isort=$isort_author list_page=$listInfo.current_page user_id=$user_id content_type_guid=$contentSelect find=$listInfo.find}</th>
-				<th colspan="2">{smartlink ititle="Most recent editor" isort=$isort_editor list_page=$listInfo.current_page user_id=$user_id content_type_guid=$contentSelect find=$listInfo.find}</th>
-				<th colspan="2">{smartlink ititle="IP" isort=ip list_page=$listInfo.current_page user_id=$user_id content_type_guid=$contentSelect find=$listInfo.find}</th>
+				<th style="width:2%;">{smartlink ititle="ID" tags=$tagsReq isort=content_id list_page=$listInfo.current_page user_id=$user_id content_type_guid=$contentSelect find=$listInfo.find}</th>
+				<th>{smartlink ititle="Title" tags=$tagsReq isort=title list_page=$listInfo.current_page user_id=$user_id content_type_guid=$contentSelect find=$listInfo.find idefault=1}</th>
+				<th>{smartlink ititle="Content Type" tags=$tagsReq isort=content_type_guid list_page=$listInfo.current_page user_id=$user_id content_type_guid=$contentSelect find=$listInfo.find}</th>
+				<th>{smartlink ititle="Author" tags=$tagsReq isort=$isort_author list_page=$listInfo.current_page user_id=$user_id content_type_guid=$contentSelect find=$listInfo.find}</th>
+				<th colspan="2">{smartlink ititle="Most recent editor" tags=$tagsReq isort=$isort_editor list_page=$listInfo.current_page user_id=$user_id content_type_guid=$contentSelect find=$listInfo.find}</th>
+				<th colspan="2">{smartlink ititle="IP" tags=$tagsReq isort=ip list_page=$listInfo.current_page user_id=$user_id content_type_guid=$contentSelect find=$listInfo.find}</th>
 			</tr>
 			{foreach from=$contentList item=item}
 				<tr class="{cycle values='odd,even'}">

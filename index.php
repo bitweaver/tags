@@ -10,6 +10,7 @@ $listHash = $_REQUEST;
 
 if( isset($_REQUEST['tags']) ){
 	$listData = $tag->getContentList( $listHash );
+	$gBitSmarty->assign( 'tagsReq', $_REQUEST['tags'] );
 	$gBitSystem->display( 'bitpackage:tags/list_content.tpl', tra( 'Tagged Content' ) );
 }else{
 	$listData = $tag->getList( $listHash );
