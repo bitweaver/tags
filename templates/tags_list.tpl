@@ -21,7 +21,7 @@
 					{/if}
 
 					{if $gBitUser->hasPermission( 'p_tags_remove' )}
-						{smartlink ititle="Remove" ibiticon="icons/edit-delete" action=remove remove_tag_id=$tag.tag_id status_id=$smarty.request.status_id}
+						{smartlink ititle="Remove" ibiticon="icons/edit-delete" action=remove tag_id=$tag.tag_id status_id=$smarty.request.status_id}
 					{/if}
 				</td>
 			</tr>		

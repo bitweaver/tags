@@ -269,13 +269,15 @@ class LibertyTag extends LibertyBase {
 	**/
 	function expunge( $tag_id ) {
 		$ret = FALSE;
-		if( $this->isValid() ) {
-			$query = "DELETE FROM `".BIT_DB_PREFIX."tags` WHERE `tag_id` = ?";
-			$result = $this->mDb->query( $query, array( $tag_id ) );
-			
+		$query = "DELETE FROM `".BIT_DB_PREFIX."tags` WHERE `tag_id` = ?";
+		if ( $result = $this->mDb->query( $query, array( $tag_id ) ) ){
 			// remove all references to tag in tags_content_map
 			$query_map = "DELETE FROM `".BIT_DB_PREFIX."tags_content_map` WHERE `tag_id` = ?";			
-			$result = $this->mDb->query( $query_map, array( $tag_id ) );			
+			if ( $result = $this->mDb->query( $query_map, array( $tag_id ) ) ) {
+				$ret = TRUE;
+			}else{
+				//some rollback feature would be nice here
+			}
 		}
 		return $ret;
 	}
