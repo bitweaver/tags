@@ -51,6 +51,29 @@ class LibertyTag extends LibertyBase {
 		return( count( $this->mInfo ) );
 	}
 
+
+	function loadTag ( &$pParamHash ){
+		if( !empty( $pParamHash['tag_id'] ) && is_numeric( $pParamHash['tag_id'] )) {		
+			$selectSql = ''; $joinSql = ''; $whereSql = '';	
+			$bindVars = array();
+			
+			$whereSql .= "WHERE tg.`tag_id` = ?";
+			$bindVars[] = $pParamHash['tag_id'];
+			
+			$query = "
+					SELECT tg.* 
+					FROM `".BIT_DB_PREFIX."tags` tg
+					$whereSql";
+					
+			if ( $result = $this->mDb->getRow( $query, $bindVars ) ){
+				$this->mInfo = $result;		
+			};
+		}			
+		return( count( $this->mInfo ) );
+	}
+
+
+
 	/**
 	* Make sure the data is safe to store
 	* @param array pParams reference to hash of values that will be used to store the page, they will be modified where necessary
@@ -58,6 +81,7 @@ class LibertyTag extends LibertyBase {
 	* @access private
 	**/
 	function verify( &$pParamHash ) {
+		global $gBitUser, $gBitSystem;
 		$pParamHash['tag_store'] = array();
 		$pParamHash['tag_map_store'] = array();
 
@@ -65,7 +89,8 @@ class LibertyTag extends LibertyBase {
 			$pParamHash['tag_store']['tag'] = $pParamHash['tag'];			
 		}
 		if( !empty( $pParamHash['tag_id']) && is_numeric( $pParamHash['tag_id'])){	
-			$pParamHash['tag_map_store']['tag_id'] = $pParamHash['tag_id'];			
+//			$pParamHash['tag_map_store']['tag_id'] = $pParamHash['tag_id'];			
+			$pParamHash['tag_store']['tag_id'] = $pParamHash['tag_id'];			
 		}
 		if( isset( $pParamHash['tagged_on']) ){	
 			$pParamHash['tag_map_store']['tagged_on'] = $pParamHash['tagged_on'];			
@@ -74,12 +99,11 @@ class LibertyTag extends LibertyBase {
 		}
 		if( @$this->verifyId( $pParamHash['content_id']) ){	
 			$pParamHash['tag_map_store']['content_id'] = $pParamHash['content_id'];			
-		} else {
+		}/* else {
 			$this->mErrors['content_id'] = "No content id specified.";
-		}
-		// is this the best way to associate a user_id? should it even be included? -wjames5
-		if( @$this->verifyId( $pParamHash['user_id']) ){	
-			$pParamHash['tag_map_store']['tagger_id'] = $pParamHash['user_id'];			
+		}*/
+		if( $gBitUser->mUserId ){	
+			$pParamHash['tag_map_store']['tagger_id'] = $gBitUser->mUserId;			
 		} else {
 			$this->mErrors['user_id'] = "No user id specified.";
 		}
@@ -149,6 +173,30 @@ class LibertyTag extends LibertyBase {
 		}
 		return( count( $this->mErrors )== 0 );
 	}
+
+
+
+	function storeOneTag( &$pParamHash ) {
+		if( $this->verify( $pParamHash ) ) {
+			$this->mDb->StartTrans();
+			if (!empty($pParamHash['tag_store'])) {
+				$tagtable = BIT_DB_PREFIX."tags"; 
+				$this->mDb->StartTrans();				
+
+				if( isset($pParamHash['tag_store']['tag_id']) ) {
+					//this is kind of ugly but it works right
+					$this->mDb->associateUpdate( $tagtable, array("tag" => $pParamHash['tag_store']['tag']),  array( "tag_id" => $pParamHash['tag_id'] )  );
+				} else {
+					$pParamHash['tag_store']['tag_id'] = $this->mDb->GenID( 'tags_tag_id_seq' );
+					$this->mDb->associateInsert( $tagtable, $pParamHash['tag_store'] );
+				}
+			}
+			$this->mDb->CompleteTrans();
+			$this->loadTag( $pParamHash['tag_store'] );
+		}
+		return( count( $this->mErrors )== 0 );
+	}
+
 
 
 	/* make tag data is safe to store
@@ -312,8 +360,11 @@ class LibertyTag extends LibertyBase {
 			$lowcant = $orderedcant[0];
 			$highcant = $orderedcant[ (count($orderedcant) - 1) ];
 			
+			//hack to prevent us from dividing by zero - this whole weighting thing could use a slightly better formula
+			if ($highcant == $lowcant){$lowcant -= 1;}
+
 			//rescore
-			//1.  High-low = x		
+			//1.  High-low = x
 			$cantoffset = $highcant - $lowcant;
 			
 			//2.  ratio 10/x
@@ -473,23 +524,27 @@ function tags_content_edit( $pObject=NULL ) {
  * @param includeds a string or array of 'tags' and contentid for association.
  **/
 function tags_content_store( &$pObject, &$pParamHash ) {
-	global $gBitSystem;
-	$errors = NULL;
-	// If a content access system is active, let's call it
-	if( $gBitSystem->isPackageActive( 'tags' ) ) {
-		$tag = new LibertyTag( $pObject->mContentId );
-		if ( !$tag->storeTags( $pParamHash ) ) {
-			$errors=$tag->mErrors;
+	global $gBitUser, $gBitSystem;
+	if( $gBitUser->hasPermission( 'p_tags_create' ) ) {		
+		$errors = NULL;
+		// If a content access system is active, let's call it
+		if( $gBitSystem->isPackageActive( 'tags' ) ) {
+			$tag = new LibertyTag( $pObject->mContentId );
+			if ( !$tag->storeTags( $pParamHash ) ) {
+				$errors=$tag->mErrors;
+			}
 		}
+		return( $errors );
 	}
-	return( $errors );
 }
 
 function tags_content_preview( &$pObject) {
-	global $gBitSystem;
-	if ( $gBitSystem->isPackageActive( 'tags' ) ) {		
-		if (isset($_REQUEST['tags'])) {
-			$pObject->mInfo['tags'] = $_REQUEST['tags'];
+	global $gBitUser, $gBitSystem;
+	if( $gBitUser->hasPermission( 'p_tags_create' ) ) {		
+		if ( $gBitSystem->isPackageActive( 'tags' ) ) {		
+			if (isset($_REQUEST['tags'])) {
+				$pObject->mInfo['tags'] = $_REQUEST['tags'];
+			}
 		}
 	}
 }

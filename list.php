@@ -9,8 +9,6 @@ $tag = new LibertyTag();
 $listHash = $_REQUEST;
 $tagHash = $_REQUEST;
 
-$gBitSmarty->assign( 'cloud', TRUE );
-
 if( isset($_REQUEST['tags']) ){
 	$listData = $tag->getContentList( $listHash );
 	$tagData = $tag->getList( $tagHash );

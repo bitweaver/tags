@@ -33,4 +33,13 @@ $sequences = array (
   'tags_tag_id_seq' => array( 'start' => 1 ),
 );
 $gBitInstaller->registerSchemaSequences( TAGS_PKG_NAME, $sequences );
+
+
+// ### Default UserPermissions
+$gBitInstaller->registerUserPermissions( TAGS_PKG_NAME, array(
+	array( 'p_tags_admin', 'Can admin tags', 'admin', TAGS_PKG_NAME ),
+	array( 'p_tags_create', 'Can create tags', 'registered', TAGS_PKG_NAME ),
+	array( 'p_tags_edit', 'Can edit tags', 'editors', TAGS_PKG_NAME ),
+	array( 'p_tags_remove', 'Can delete tags', 'admin',  TAGS_PKG_NAME ),
+) );
 ?>

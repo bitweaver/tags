@@ -8,6 +8,7 @@
 
 	<div class="body">
 	
+		{if $cloud}
 		<div class="navbar">
 			<ul><li>Sort by:
 				</li>				
@@ -19,9 +20,11 @@
 				</li>
 			</ul>
 		</div>
-
 		<div class="clear"></div>
-		{include file="bitpackage:tags/tags_cloud.tpl"}
+			{include file="bitpackage:tags/tags_cloud.tpl"}
+		{else}
+			{include file="bitpackage:tags/tags_list.tpl"}
+		{/if}
 	</div><!-- end .body -->
 </div><!-- end .tags -->
 {/strip}
