@@ -266,7 +266,7 @@ class LibertyTag extends LibertyBase {
 	**/
 	function storeTags( &$pParamHash ){
 		global $gBitSystem;
-		if( $this->verifyTagsMap( $pParamHash ) ) {
+		if( $this->verifyTagsMap( $pParamHash ) ) {		  
 			if( $this->isValid() ) {
 				foreach ( $pParamHash['map_store'] as $value) {
 					$result = $this->store( $value );					
@@ -290,6 +290,7 @@ class LibertyTag extends LibertyBase {
 	**/
 	function expunge( $tag_id ) {
 		$ret = FALSE;
+		$this->mDb->StartTrans();
 		$query = "DELETE FROM `".BIT_DB_PREFIX."tags` WHERE `tag_id` = ?";
 		if ( $result = $this->mDb->query( $query, array( $tag_id ) ) ){
 			// remove all references to tag in tags_content_map
@@ -300,6 +301,7 @@ class LibertyTag extends LibertyBase {
 				//some rollback feature would be nice here
 			}
 		}
+		$this->mDb->CompleteTrans();
 		return $ret;
 	}
 
@@ -309,8 +311,10 @@ class LibertyTag extends LibertyBase {
 	function expungeContentFromTagMap(){
 		$ret = FALSE;
 		if( $this->isValid() ) {
+			$this->mDb->StartTrans();
 			$query = "DELETE FROM `".BIT_DB_PREFIX."tags_content_map` WHERE `content_id` = ?";			
 			$result = $this->mDb->query( $query, array( $this->mContentId ) );			
+			$this->mDb->CompleteTrans();
 		}
 		return $ret;
 	}
@@ -322,12 +326,28 @@ class LibertyTag extends LibertyBase {
 		global $gBitUser;
 		$ret = FALSE;
 		if( $this->isValid() ) {
+			$this->mDb->StartTrans();
 			$query = "DELETE FROM `".BIT_DB_PREFIX."tags_content_map` WHERE `content_id` = ? AND tagger_id = ?";			
 			$result = $this->mDb->query( $query, array( $this->mContentId, $gBitUser->mUserId  ) );			
+			$this->mDb->CompleteTrans();
 		}
 		return $ret;
 	}
 	
+	/**
+	 * The function removes one or more tag from a piece of content
+	 */
+	function expungeTags($pContentId, $pTagIdArray) {
+		if (LibertyContent::verifyId($pContentId)) {
+			$this->mDb->StartTrans();
+			$query = "DELETE FROM `".BIT_DB_PREFIX."tags_content_map` WHERE `content_id` = ? AND tag_id IN (".implode( ',',array_fill( 0,count( $pTagIdArray ),'?' ) )." )";
+			$bind[] = $pContentId;
+			$bind = array_merge($bind, $pTagIdArray);
+			$result = $this->mDb->query( $query, $bind );
+			$this->mDb->CompleteTrans();
+		}
+	}
+
 	/**
 	* This function gets a list of tags
 	**/

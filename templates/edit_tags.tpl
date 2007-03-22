@@ -1,4 +1,5 @@
 {strip}
+{if $gContent->mContentTypeGuid != 'bitcomment' || $gBitSystem->isFeatureActive('tags_on_comments')}
 	<div class="row">
 		{formlabel label="Add Tags" for="tags"}
 		{forminput}
@@ -9,4 +10,5 @@
 	{forminput}
 		{include file='bitpackage:tags/view_tags_mini_inc.tpl' tagData=$tagData}
 	{/forminput}
+{/if}
 {/strip}

@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_tags/admin/admin_tags_inc.php,v 1.2 2007/03/22 18:14:36 nickpalmer Exp $
+// $Header: /cvsroot/bitweaver/_bit_tags/admin/admin_tags_inc.php,v 1.3 2007/03/22 20:45:49 nickpalmer Exp $
 // Copyright (c) 2005 bitweaver Tags
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -22,6 +22,17 @@ $formTagsDisplayOptions = array(
 	),
 );
 $gBitSmarty->assign( 'formTagsDisplayOptions', $formTagsDisplayOptions );
+
+/*
+$formTagsOtherOptions = array(
+	"tags_on_comments" => array(
+		'label' => 'Allow Tags on Comments',
+		'note' => 'Allows tags to be placed on comments',
+		'type' => 'toggle',
+	),
+);
+$gBitSmarty->assign( 'formTagsOtherOptions', $formTagsOtherOptions );
+*/
 
 $formTagsStripOptions = array(
 	"tags_lowercase" => array(
