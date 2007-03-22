@@ -4,6 +4,8 @@ require_once( TAGS_PKG_PATH."LibertyTag.php" );
 
 $gBitSystem->verifyPackage( 'tags' );
 
+$gBitSystem->verifyPermission('p_tags_view');
+
 $tag = new LibertyTag();
 
 $listHash = $_REQUEST;

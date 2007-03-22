@@ -1,7 +1,7 @@
 <?php
 $tables = array(
   'tags' => "
-    tag_id I4 NOTNULL,
+    tag_id I4 PRIMARY,
     tag C(64) NOTNULL
   ",
 
@@ -28,6 +28,17 @@ $gBitInstaller->registerPackageInfo( TAGS_PKG_NAME, array(
 ) );
 
 
+$gBitInstaller->registerPreferences( TAGS_PKG_NAME, array(
+	array( TAGS_PKG_NAME, 'tags_in_view', 'y' ),
+	//	array( TAGS_PKG_NAME, 'tags_in_nav', 'n' ),
+	//	array( TAGS_PKG_NAME, 'tags_in_body', 'n' ),
+	//	array( TAGS_PKG_NAME, 'tags_lowercase 'n'),
+	//	array( TAGS_PKG_NAME, 'tags_strip_spaces 'n'),
+	//	array( TAGS_PKG_NAME, 'tags_strip_nonword 'n'),
+	//	array( TAGS_PKG_NAME, 'tags_strip_regexp ''),
+	//	array( TAGS_PKG_NAME, 'tags_strip_replace ''),
+) );
+
 // ### Sequences
 $sequences = array (
   'tags_tag_id_seq' => array( 'start' => 1 ),
@@ -39,6 +50,7 @@ $gBitInstaller->registerSchemaSequences( TAGS_PKG_NAME, $sequences );
 $gBitInstaller->registerUserPermissions( TAGS_PKG_NAME, array(
 	array( 'p_tags_admin', 'Can admin tags', 'admin', TAGS_PKG_NAME ),
 	array( 'p_tags_create', 'Can create tags', 'registered', TAGS_PKG_NAME ),
+	array( 'p_tags_view', 'Can view tags', 'basic', TAGS_PKG_NAME ),
 	array( 'p_tags_edit', 'Can edit tags', 'editors', TAGS_PKG_NAME ),
 	array( 'p_tags_remove', 'Can delete tags', 'admin',  TAGS_PKG_NAME ),
 ) );

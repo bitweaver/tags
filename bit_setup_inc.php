@@ -24,6 +24,8 @@ if( $gBitSystem->isPackageActive( 'tags' ) ) {
 			'content_preview_function'  => 'tags_content_preview',
 			'content_expunge_function'  => 'tags_content_expunge',
 			'content_edit_mini_tpl'		=> 'bitpackage:tags/edit_tags_mini_inc.tpl',
-			'content_view_tpl'          => 'bitpackage:tags/view_tags_mini_inc.tpl',
+			'content_view_tpl'          => 'bitpackage:tags/view_tags_view.tpl',
+			'content_nav_tpl'           => 'bitpackage:tags/view_tags_nav.tpl',
+			'content_body_tpl'           => 'bitpackage:tags/view_tags_body.tpl',
 	) );
 }?>

@@ -4,7 +4,7 @@ require_once( TAGS_PKG_PATH."LibertyTag.php" );
 
 $gBitSystem->verifyPackage( 'tags' );
 
-if ( !$gBitUser->hasPermission('p_tags_edit') ){
+if ( !$gBitUser->hasPermission('p_tags_admin') ){
 	$gBitSystem->fatalError( 'You do not have permission to edit Tags' );
 }
 

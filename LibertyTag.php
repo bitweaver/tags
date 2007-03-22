@@ -42,11 +42,13 @@ class LibertyTag extends LibertyBase {
 					
 			//$this->mInfo = $this->mDb->query( $query, array( $this->mContentId ) );
 			$result = $this->mDb->query( $query, array( $this->mContentId ) );
-			$ret = array();
-			while ($res = $result->fetchRow()) {
-				$ret[] = $res;
+			if ($result) {
+				$ret = array();
+				while ($res = $result->fetchRow()) {
+					$ret[] = $res;
+				}
+				$this->mInfo['tags'] = $ret; 
 			}
-			$this->mInfo['tags'] = $ret;							
 		}
 		return( count( $this->mInfo ) );
 	}
@@ -154,17 +156,15 @@ class LibertyTag extends LibertyBase {
 			if (!empty($pParamHash['tag_store'])) {
 				$tagtable = BIT_DB_PREFIX."tags"; 
 				$maptable = BIT_DB_PREFIX."tags_content_map";
-				$this->mDb->StartTrans();				
 				
 				if( $this->verifyTag($pParamHash['tag_store']) ) {
 					$pParamHash['tag_map_store']['tag_id'] = $pParamHash['tag_store']['tag_id'];
 					$this->mDb->associateInsert( $maptable, $pParamHash['tag_map_store'] );
 				} else {
 					$pParamHash['tag_store']['tag_id'] = $this->mDb->GenID( 'tags_tag_id_seq' );
-					if ( $this->mDb->associateInsert( $tagtable, $pParamHash['tag_store'] ) ){
-						$this->mTagId = $pParamHash['tag_map_store']['tag_id'] = $pParamHash['tag_store']['tag_id'];
-						$this->mDb->associateInsert( $maptable, $pParamHash['tag_map_store'] );
-					}
+					$this->mDb->associateInsert( $tagtable, $pParamHash['tag_store'] );
+					$this->mTagId = $pParamHash['tag_map_store']['tag_id'] = $pParamHash['tag_store']['tag_id'];
+					$this->mDb->associateInsert( $maptable, $pParamHash['tag_map_store'] );
 				}
 			}
 			$this->mDb->CompleteTrans();
@@ -181,7 +181,6 @@ class LibertyTag extends LibertyBase {
 			$this->mDb->StartTrans();
 			if (!empty($pParamHash['tag_store'])) {
 				$tagtable = BIT_DB_PREFIX."tags"; 
-				$this->mDb->StartTrans();				
 
 				if( isset($pParamHash['tag_store']['tag_id']) ) {
 					//this is kind of ugly but it works right
@@ -197,7 +196,29 @@ class LibertyTag extends LibertyBase {
 		return( count( $this->mErrors )== 0 );
 	}
 
+	function sanitizeTag($pTag) {
+		global $gBitSystem;
 
+		// We always trim tags
+		$pTag = trim($pTag);
+
+		if( $gBitSystem->isFeatureActive("tags_strip_spaces") ) {
+			$pTag = preg_replace('/\s+/', '', $pTag);
+		}
+
+		if( $gBitSystem->isFeatureActive("tags_strip_nonword") ) {
+			$pTag  = preg_replace('/\W+/', '', $pTag);	      
+		}
+
+		if( $gBitSystem->isFeatureActive("tags_lowercase") ) {
+			$pTag = strtolower($pTag);
+		}
+		
+		if( $gBitSystem->getConfig('tags_strip_regexp') ) {
+			$pTag = preg_replace($gBitSystem->getConfig('tags_strip_regexp', $pTag), $gBitSystem->getConfig('tags_strip_replace'), $pTag);
+		}
+		return $pTag;
+	}
 
 	/* make tag data is safe to store
 	 */
@@ -221,13 +242,13 @@ class LibertyTag extends LibertyBase {
 		}
 	
 		foreach( $tagIds as $value ) {
-			//how do we sanitize tags here? -wjames5
+			$value = LibertyTag::sanitizeTag($value);
 			if( !empty($value) ) {
-				array_push( $pParamHash['map_store'], array( 
-					'tag' => $value, 
+				array_push( $pParamHash['map_store'], array(
+					'tag' => $value,
 					'tagged_on' => $timeStamp,
 					'content_id' => $this->mContentId, 
-					'user_id' => $gBitUser->mUserId, 
+					'user_id' => $gBitUser->mUserId,
 				));
 			} else {
 				$this->mErrors[$value] = "Invalid tag.";
@@ -290,6 +311,19 @@ class LibertyTag extends LibertyBase {
 		if( $this->isValid() ) {
 			$query = "DELETE FROM `".BIT_DB_PREFIX."tags_content_map` WHERE `content_id` = ?";			
 			$result = $this->mDb->query( $query, array( $this->mContentId ) );			
+		}
+		return $ret;
+	}
+
+	/**
+	* This function removes all references to contentid from tags_content_map
+	**/
+	function expungeMyContentFromTagMap(){
+		global $gBitUser;
+		$ret = FALSE;
+		if( $this->isValid() ) {
+			$query = "DELETE FROM `".BIT_DB_PREFIX."tags_content_map` WHERE `content_id` = ? AND tagger_id = ?";			
+			$result = $this->mDb->query( $query, array( $this->mContentId, $gBitUser->mUserId  ) );			
 		}
 		return $ret;
 	}
@@ -357,6 +391,7 @@ class LibertyTag extends LibertyBase {
 
 		//this part creates the tag weight in a scale of 1-10		
 			//get highest count and get lowest count
+		if (!empty($orderedcant)) {
 			sort($orderedcant);
 			
 			$lowcant = $orderedcant[0];
@@ -380,6 +415,7 @@ class LibertyTag extends LibertyBase {
 			foreach ($ret as $key => $row) {
 				$ret[$key]['tagscale']  = round((($row['popcant'] - $lowcant) * $tagscale) + 1, 0);
 			}
+		}
 						
 		//if the user has asked to sort the tags by use we sort the array before returning it
 		if ( isset($_REQUEST['sort']) && $_REQUEST['sort']=='mostpopular' ) {
@@ -469,8 +505,8 @@ class LibertyTag extends LibertyBase {
 function tags_content_display( &$pObject ) {
 	global $gBitSystem, $gBitSmarty, $gBitUser;
 	if ( $gBitSystem->isPackageActive( 'tags' ) ) {
-		$tag = new LibertyTag( $pObject->mContentId );
 		if( $gBitUser->hasPermission( 'p_tags_view' ) ) {		
+			$tag = new LibertyTag( $pObject->mContentId );
 			if( $tag->load() ) {
 				$gBitSmarty->assign( 'tagData', !empty( $tag->mInfo['tags'] ) ? $tag->mInfo['tags'] : NULL );
 			}
@@ -514,8 +550,19 @@ function tags_content_edit( $pObject=NULL ) {
 	global $gBitSystem, $gBitSmarty, $gBitUser;
 	if ( $gBitSystem->isPackageActive( 'tags' ) ) {
 		$tag = new LibertyTag( $pObject->mContentId );
-		if( $gBitUser->hasPermission( 'p_tags_view' ) ) {		
+		if( $gBitUser->hasPermission( 'p_tags_create' ) || $gBitUser->hasPermission( 'p_tag_edit' )) {		
 			if( $tag->load() ) {
+				if ($gBitUser->hasPermission( 'p_tags_edit' )) {
+					$tags = array();
+					foreach ($tag->mInfo['tags'] as $t) {
+					  
+						if ($t['tagger_id'] == $gBitUser->mUserId) {
+							$tags[] = $t['tag'];
+						}
+					}
+
+					$gBitSmarty->assign( 'tagList', !empty( $tags ) ? implode(", ", $tags) : NULL );
+				}
 				$gBitSmarty->assign( 'tagData', !empty( $tag->mInfo['tags'] ) ? $tag->mInfo['tags'] : NULL );
 			}
 		}
@@ -532,6 +579,9 @@ function tags_content_store( &$pObject, &$pParamHash ) {
 		// If a content access system is active, let's call it
 		if( $gBitSystem->isPackageActive( 'tags' ) ) {
 			$tag = new LibertyTag( $pObject->mContentId );
+			if ( $gBitUser->hasPermission('p_tags_edit') ) {
+				$tag->expungeMyContentFromTagMap();
+			}
 			if ( !$tag->storeTags( $pParamHash ) ) {
 				$errors=$tag->mErrors;
 			}
@@ -541,11 +591,12 @@ function tags_content_store( &$pObject, &$pParamHash ) {
 }
 
 function tags_content_preview( &$pObject) {
-	global $gBitUser, $gBitSystem;
+	global $gBitUser, $gBitSystem, $gBitSmarty;
 	if( $gBitUser->hasPermission( 'p_tags_create' ) ) {		
 		if ( $gBitSystem->isPackageActive( 'tags' ) ) {		
 			if (isset($_REQUEST['tags'])) {
-				$pObject->mInfo['tags'] = $_REQUEST['tags'];
+			  //$pObject->mInfo['tags'] = $_REQUEST['tags'];
+				$gBitSmarty->assign('tagList', $_REQUEST['tags']);
 			}
 		}
 	}
