@@ -12,7 +12,9 @@
 			<input type="hidden" name="tag_{$tagData[tag].tag_id}" value="{$tagData[tag].tag}" />
 		{/if}
 	{/section}
-	<input type="submit" name="drop_tags" value="{tr}Drop Tags{/tr}" />
+	{if $gContent->isOwner() || $gBitUser->hasPermission('p_tags_admin')}
+		<input type="submit" name="drop_tags" value="{tr}Drop Tags{/tr}" />
+	{/if}
 	</form>
 </div>		
 {/if}
