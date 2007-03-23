@@ -239,21 +239,21 @@ class LibertyTag extends LibertyBase {
 			}else if ( is_numeric( $tagMixed ) ) {
 				$tagIds = array( $tagMixed );
 			}
+
+			foreach( $tagIds as $value ) {
+				$value = LibertyTag::sanitizeTag($value);
+				if( !empty($value) ) {
+					array_push( $pParamHash['map_store'], array(
+						'tag' => $value,
+						'tagged_on' => $timeStamp,
+						'content_id' => $this->mContentId, 
+						'user_id' => $gBitUser->mUserId,
+					));
+				} else {
+					$this->mErrors[$value] = "Invalid tag.";
+				}
+			}		
 		}
-	
-		foreach( $tagIds as $value ) {
-			$value = LibertyTag::sanitizeTag($value);
-			if( !empty($value) ) {
-				array_push( $pParamHash['map_store'], array(
-					'tag' => $value,
-					'tagged_on' => $timeStamp,
-					'content_id' => $this->mContentId, 
-					'user_id' => $gBitUser->mUserId,
-				));
-			} else {
-				$this->mErrors[$value] = "Invalid tag.";
-			}
-		}		
 
 		return ( count( $this->mErrors ) == 0 );
 	}
