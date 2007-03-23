@@ -1,6 +1,7 @@
 <?php
 
 require_once( KERNEL_PKG_PATH.'BitBase.php' );
+require_once( LIBERTY_PKG_PATH.'LibertyComment.php' );
 
 class LibertyTag extends LibertyBase {
 	var $mContentId;
