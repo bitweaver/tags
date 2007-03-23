@@ -1,7 +1,6 @@
 <?php
 
 require_once( KERNEL_PKG_PATH.'BitBase.php' );
-require_once( LIBERTY_PKG_PATH.'LibertyComment.php' );
 
 class LibertyTag extends LibertyBase {
 	var $mContentId;
@@ -231,7 +230,8 @@ class LibertyTag extends LibertyBase {
 		//this is to set the time we add content to a tag.
 		$timeStamp = $gBitSystem->getUTCTime();
 		
-		$tagMixed = $pParamHash['tags']; //need to break up this string
+		//need to break up this string
+		$tagMixed = isset($pParamHash['tags']) ? $pParamHash['tags'] : NULL;
 		if( !empty( $tagMixed )){
 			if (!is_array( $tagMixed ) && !is_numeric( $tagMixed ) ){
 				$tagIds = explode( ",", $tagMixed );
@@ -398,7 +398,6 @@ class LibertyTag extends LibertyBase {
 		$cant = $this->mDb->getOne($query_cant,$bindVars);
 		$ret = array();
 
-		$comment = &new LibertyComment();
 		while ($res = $result->fetchRow()) {
 			$res['popcant'] = $this->getPopCount($res['tag_id']);
 			$ret[] = $res;
