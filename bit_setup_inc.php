@@ -1,4 +1,6 @@
 <?php
+global $gBitSystem, $gBitUser;
+
 $registerHash = array(
         'package_name' => 'tags',
         'package_path' => dirname( __FILE__ ).'/',
@@ -7,6 +9,7 @@ $registerHash = array(
 $gBitSystem->registerPackage( $registerHash );
 
 if( $gBitSystem->isPackageActive( 'tags' ) ) {
+	if( $gBitUser->hasPermission( 'p_tags_view' ) ) {
 	require_once( TAGS_PKG_PATH.'LibertyTag.php' );
 
 	$menuHash = array(
@@ -28,4 +31,5 @@ if( $gBitSystem->isPackageActive( 'tags' ) ) {
 			'content_nav_tpl'           => 'bitpackage:tags/view_tags_nav.tpl',
 			'content_body_tpl'           => 'bitpackage:tags/view_tags_body.tpl',
 	) );
+}
 }?>
