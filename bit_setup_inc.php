@@ -8,8 +8,7 @@ $registerHash = array(
 );
 $gBitSystem->registerPackage( $registerHash );
 
-if( $gBitSystem->isPackageActive( 'tags' ) ) {
-	if( $gBitUser->hasPermission( 'p_tags_view' ) ) {
+if( $gBitSystem->isPackageActive( 'tags' ) && $gBitUser->hasPermission( 'p_tags_view' )) {
 	require_once( TAGS_PKG_PATH.'LibertyTag.php' );
 
 	$menuHash = array(
@@ -29,7 +28,7 @@ if( $gBitSystem->isPackageActive( 'tags' ) ) {
 			'content_edit_mini_tpl'		=> 'bitpackage:tags/edit_tags_mini_inc.tpl',
 			'content_view_tpl'          => 'bitpackage:tags/view_tags_view.tpl',
 			'content_nav_tpl'           => 'bitpackage:tags/view_tags_nav.tpl',
-			'content_body_tpl'           => 'bitpackage:tags/view_tags_body.tpl',
+			'content_body_tpl'          => 'bitpackage:tags/view_tags_body.tpl',
 	) );
 }
-}?>
+?>
