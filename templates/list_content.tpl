@@ -9,9 +9,9 @@
 		{form legend="Search Content by Tags"}
 			<input type="hidden" name="user_id" value="{$user_id}" />
 			<div class="row">
-				{formlabel label="Enter Tags" for="content_type_guid"}
+				{formlabel label="Enter Tags" for="search_tags"}
 				{forminput}
-					<input type="text" name="tags" value="{$listInfo.tags}" />
+					<input type="text" name="tags" id="search_tags" value="{$listInfo.tags}" />
 					<input type="submit" value="{tr}Search{/tr}" name="search_objects" />
 				{/forminput}
 			</div>
