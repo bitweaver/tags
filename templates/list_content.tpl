@@ -5,7 +5,6 @@
 	</div>
 
 	<div class="body">
-		{strip}
 		{form legend="Search Content by Tags"}
 			<input type="hidden" name="user_id" value="{$user_id}" />
 			<div class="row">
@@ -16,7 +15,7 @@
 				{/forminput}
 			</div>
 		{/form}
-		
+
 		{* assign the correct sort columns for user name sorting *}
 		{if $gBitSystem->getConfig( 'users_display_name' ) eq 'login'}
 			{assign var=isort_author value=creator_user}
@@ -25,7 +24,7 @@
 			{assign var=isort_author value=creator_real_name}
 			{assign var=isort_editor value=modifier_real_name}
 		{/if}
-		
+
 		<table class="data">
 			<caption>{tr}Available Content{/tr} <span class="total">[ {$listInfo.total_records} ]</span></caption>
 			<tr>
@@ -48,14 +47,14 @@
 				</tr>
 			{/foreach}
 		</table>
-		
+
 		{pagination}
-		{/strip}
-	<div class="header">
-		<h1>{tr}Tags{/tr}</h1>
-	</div>
+
+		<div class="header">
+			<h1>{tr}Tags{/tr}</h1>
+		</div>
+
 		{include file="bitpackage:tags/tags_cloud.tpl"}
 	</div><!-- end .body -->
 </div><!-- end .liberty -->
 {/strip}
-		
