@@ -395,7 +395,7 @@ class LibertyTag extends LibertyBase {
 			FROM `".BIT_DB_PREFIX."tags` tg
 				$joinSql";
 
-		$result = $this->mDb->query($query,$bindVars);
+		$result = $this->mDb->query($query,$bindVars, ( !empty($pParamHash['max_records']) ? $pParamHash['max_records'] : NULL ));
 		$cant = $this->mDb->getOne($query_cant,$bindVars);
 		$ret = array();
 
@@ -439,7 +439,7 @@ class LibertyTag extends LibertyBase {
 		}
 
 		//if the user has asked to sort the tags by use we sort the array before returning it
-		if ( isset($_REQUEST['sort']) && $_REQUEST['sort']=='mostpopular' ) {
+		if ( isset($pParamHash['sort']) && $pParamHash['sort']=='mostpopular' ) {
 			array_multisort($popcant, SORT_DESC, $ret);
 		}
 

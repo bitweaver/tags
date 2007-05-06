@@ -8,6 +8,7 @@ $gBitSystem->verifyPermission('p_tags_view');
 
 $tag = new LibertyTag();
 
+$_REQUEST['max_records'] = !empty( $_REQUEST['max_records'] ) ? $_REQUEST['max_records'] : NULL;
 $listHash = $_REQUEST;
 $tagHash = $_REQUEST;
 
