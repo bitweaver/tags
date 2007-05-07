@@ -1,4 +1,4 @@
-<div class="floaticon">{bithelp}</div>
+<!-- <div class="floaticon">{bithelp}</div> -->
 
 {strip}
 <div class="listing tags">

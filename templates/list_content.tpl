@@ -32,8 +32,9 @@
 				<th>{smartlink ititle="Title" tags=$tagsReq isort=title list_page=$listInfo.current_page user_id=$user_id content_type_guid=$contentSelect find=$listInfo.find idefault=1}</th>
 				<th>{smartlink ititle="Content Type" tags=$tagsReq isort=content_type_guid list_page=$listInfo.current_page user_id=$user_id content_type_guid=$contentSelect find=$listInfo.find}</th>
 				<th>{smartlink ititle="Author" tags=$tagsReq isort=$isort_author list_page=$listInfo.current_page user_id=$user_id content_type_guid=$contentSelect find=$listInfo.find}</th>
-				<th colspan="2">{smartlink ititle="Most recent editor" tags=$tagsReq isort=$isort_editor list_page=$listInfo.current_page user_id=$user_id content_type_guid=$contentSelect find=$listInfo.find}</th>
-				<th colspan="2">{smartlink ititle="IP" tags=$tagsReq isort=ip list_page=$listInfo.current_page user_id=$user_id content_type_guid=$contentSelect find=$listInfo.find}</th>
+				<th>{smartlink ititle="Most recent editor" tags=$tagsReq isort=$isort_editor list_page=$listInfo.current_page user_id=$user_id content_type_guid=$contentSelect find=$listInfo.find}</th>
+				<th>{smartlink ititle="Last Modified" tags=$tagsReq isort=last_modified list_page=$listInfo.current_page user_id=$user_id content_type_guid=$content_type_guids find=$listInfo.find}</th>
+				<th>{smartlink ititle="IP" tags=$tagsReq isort=ip list_page=$listInfo.current_page user_id=$user_id content_type_guid=$contentSelect find=$listInfo.find}</th>				
 			</tr>
 			{foreach from=$contentList item=item}
 				<tr class="{cycle values='odd,even'}">
@@ -41,20 +42,27 @@
 					<td>{$item.display_link}</td>
 					<td>{assign var=content_type_guid value=`$item.content_type_guid`}{$contentTypes.$content_type_guid}</td>
 					<td>{displayname real_name=$item.creator_real_name user=$item.creator_user}</td>
-					<td style="text-align:right;">{displayname real_name=$item.modifier_real_name user=$item.modifier_user}</td>
-					<td style="text-align:right;">{$item.last_modified|bit_short_date}</td>
-					<td>{$item.ip}</td>
+					<td style="text-align:left;">{displayname real_name=$item.modifier_real_name user=$item.modifier_user}</td>
+					<td style="text-align:center;">{$item.last_modified|bit_short_date}</td>
+					<td style="text-align:center;">{$item.ip}</td>
 				</tr>
 			{/foreach}
 		</table>
 
-		{pagination}
-
-		<div class="header">
-			<h1>{tr}Tags{/tr}</h1>
-		</div>
-
-		{include file="bitpackage:tags/tags_cloud.tpl"}
+		{pagination tags=$tagsReq}
 	</div><!-- end .body -->
+	
+	<div class="header">
+		<h1>{tr}Tags{/tr}</h1>
+	</div>
+
+	<div class="body">
+		{if $cloud}
+			{include file="bitpackage:tags/tags_cloud.tpl"}
+		{else}
+			{include file="bitpackage:tags/tags_list.tpl"}
+		{/if}
+	</div><!-- end .body -->
+	
 </div><!-- end .liberty -->
 {/strip}
