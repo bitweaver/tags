@@ -380,6 +380,8 @@ class LibertyTag extends LibertyBase {
 			'ip_desc',
 			'last_modified_asc',
 			'last_modified_desc',
+			'created_asc',
+			'created_desc',
 		);
 
 		if( empty( $pParamHash['sort_mode'] ) || in_array( $pParamHash['sort_mode'], $sortHash ) ) {
