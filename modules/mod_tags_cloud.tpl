@@ -6,7 +6,7 @@
 			{if $modTagData}
 				{foreach item=tag from=$modTagData}
 					<li class="tag{$tag.tagscale}">
-						<a href="{$smarty.const.TAGS_PKG_URL}index.php?tags={$tag.tag}">
+						<a href="{$smarty.const.TAGS_PKG_URL}index.php?tags={$tag.tag|escape:"url"}">
 							{$tag.tag}
 						</a>
 					</li>
