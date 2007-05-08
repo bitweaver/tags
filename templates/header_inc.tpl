@@ -4,7 +4,7 @@
 		{* {include file="bitpackage:tags/tags_css.tpl"} *}
 		{literal}
 		#cloud			{margin:0; padding:0;}
-		#cloud li		{display:inline; margin:0 1.4em 0 0;}
+		#cloud li		{display:inline; margin:0 .5em 0 0;}
 		#cloud .tag1 a	{font-size:0.7em; font-weight:100;}
 		#cloud .tag2 a	{font-size:0.8em; font-weight:200;}
 		#cloud .tag3 a	{font-size:0.9em; font-weight:300;}

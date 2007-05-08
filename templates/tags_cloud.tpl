@@ -1,8 +1,10 @@
-{strip}
+{* don't use strip on this tpl - it will mess up the list of links, as the browser will read them as one continuous string *}
 {if $tagData}
 	<ul id="cloud">
 		{foreach item=tag from=$tagData}
-			<li class="tag{$tag.tagscale}"><a href="{$smarty.const.TAGS_PKG_URL}index.php?tags={$tag.tag}">{$tag.tag|escape:"url"}</a> <small>({$tag.popcant})</small></li>
+			<li class="tag{$tag.tagscale}">
+				<a href="{$smarty.const.TAGS_PKG_URL}index.php?tags={$tag.tag|escape:"url"}">{$tag.tag}</a>&nbsp;<small>({$tag.popcant})</small>
+			</li>
 		{/foreach}
 	</ul>
 {else}
@@ -10,4 +12,3 @@
 		{tr}No tags found{/tr}
 	</div>
 {/if}
-{/strip}
