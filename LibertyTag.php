@@ -463,16 +463,35 @@ class LibertyTag extends LibertyBase {
 		}
 
 		//if the user has asked to sort the tags by use we sort the array before returning it
-		if ( isset($pParamHash['sort']) && $pParamHash['sort']=='mostpopular' ) {
+		if ( (isset($pParamHash['sort']) && $pParamHash['sort']=='mostpopular') ) {
 			array_multisort($popcant, SORT_DESC, $ret);
 		}
-
+		
+		//trim to max popular count if a limit is asked for
+		if ( isset($pParamHash["max_popular"]) && is_numeric($pParamHash["max_popular"])){
+			$max_popular = $ret;
+			array_multisort($popcant, SORT_DESC, $max_popular);
+	 		$max_popular = array_slice($max_popular, 0, $pParamHash["max_popular"]);
+	 		// preserve the sort requested by matching to the original list
+			$sorted_popular = array();
+			foreach ( $ret as $retkey => $retrow){
+				foreach ( $max_popular as $key => $row){
+					if ( $row['tag_id'] ==  $retrow['tag_id'] ){
+						$sorted_popular[] = $retrow;
+						break;
+					}
+				}
+			}
+			$ret = $sorted_popular;
+		}
+ 		
 		$pParamHash["data"] = $ret;
 		$pParamHash["cant"] = $cant;
 
 		return $pParamHash;
 	}
 
+	
 	/**
 	* This function gets the number of times a tag is used aka Popularity Count
 	**/

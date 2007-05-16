@@ -21,6 +21,7 @@ $listHash = array(
 //	'max_records' => $module_rows,
 	'user'        => ( !empty( $module_params['user'] ) ? $module_params['user'] : NULL ),
 	'group_id'     => ( @BitBase::verifyId( $module_params['group_id'] ) ? $module_params['group_id'] : NULL ),
+	'max_popular' =>  ( !empty( $module_params['max_popular'] ) ? $module_params['max_popular'] : NULL ),
 );
 
 $tag = new LibertyTag();
