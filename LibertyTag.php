@@ -1,7 +1,22 @@
 <?php
+/**
+ * @version $Header: /cvsroot/bitweaver/_bit_tags/LibertyTag.php,v 1.30 2007/06/22 09:01:28 lsces Exp $
+ * @package tags
+ * 
+ * @copyright Copyright (c) 2004-2006, bitweaver.org
+ * All Rights Reserved. See copyright.txt for details and a complete list of authors.
+ * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
+ */
 
+/**
+ * required setup
+ */
 require_once( KERNEL_PKG_PATH.'BitBase.php' );
 
+/**
+ * @package tags
+ * @subpackage LibertyTag
+ */
 class LibertyTag extends LibertyBase {
 	var $mContentId;
 
@@ -526,10 +541,10 @@ class LibertyTag extends LibertyBase {
 	* Used by getContentList to strip out duplicate records in a list
 	* Lifted from http://us3.php.net/manual/en/function.array-unique.php#57006
 	*
-	* @$array - nothing to say
-	* @$group_keys - columns which have to be grouped - can be STRING or ARRAY (STRING, STRING[, ...])
-	* @$sum_keys - columns which have to be summed - can be STRING or ARRAY (STRING, STRING[, ...])
-	* @$count_key - must be STRING - count the grouped keys
+	* @param $array - nothing to say
+	* @param $group_keys - columns which have to be grouped - can be STRING or ARRAY (STRING, STRING[, ...])
+	* @param $sum_keys - columns which have to be summed - can be STRING or ARRAY (STRING, STRING[, ...])
+	* @param $count_key - must be STRING - count the grouped keys
 	*/
 	function array_distinct ($array, $group_keys, $sum_keys = NULL, $count_key = NULL){
 	  if (!is_array ($group_keys)) $group_keys = array ($group_keys);
