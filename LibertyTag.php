@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_tags/LibertyTag.php,v 1.30 2007/06/22 09:01:28 lsces Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_tags/LibertyTag.php,v 1.31 2007/06/22 11:15:08 lsces Exp $
  * @package tags
  * 
  * @copyright Copyright (c) 2004-2006, bitweaver.org
@@ -15,7 +15,6 @@ require_once( KERNEL_PKG_PATH.'BitBase.php' );
 
 /**
  * @package tags
- * @subpackage LibertyTag
  */
 class LibertyTag extends LibertyBase {
 	var $mContentId;
