@@ -1,5 +1,5 @@
 {strip}
 {if $gBitSystem->isPackageActive( 'tags' )}
-	{include file="bitpackage:tags/tags.css"}
+	<link rel="stylesheet" type="text/css" href="{$smarty.const.TAGS_PKG_URL}templates/tags.css" />
 {/if}
 {/strip}
