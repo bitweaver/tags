@@ -7,8 +7,17 @@
 		{formhelp note="Enter key words to describe your content. Separate each tag with a comma: , . Tag wisely, tag efficiently."}
 		{/forminput}
 	</div>
-	{forminput}
-		{include file='bitpackage:tags/view_tags_mini_inc.tpl' tagData=$tagData}
-	{/forminput}
+	{if count($tagData) > 0 }
+		<div class="row tags">
+			{forminput}
+				<strong>{tr}Existing Tags:{/tr}</strong>&nbsp;
+				{section name=tag loop=$tagData}
+					{if $smarty.section.tag.index > 0},&nbsp;{/if}
+					<a href="{$smarty.const.TAGS_PKG_URL}index.php?tags={$tagData[tag].tag}">{$tagData[tag].tag}</a>
+				{/section}
+				{formhelp note="NOTE: To remove tags use the \"Drop Tag\" options that are available when just viewing this content."}
+			{/forminput}
+		</div>
+	{/if}
 {/if}
 {/strip}
