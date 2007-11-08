@@ -1,14 +1,17 @@
 <?php
-global $gBitSystem, $gBitUser;
+global $gBitSystem, $gBitUser, $gBitThemes;
 
 $registerHash = array(
-        'package_name' => 'tags',
-        'package_path' => dirname( __FILE__ ).'/',
-        'service' => LIBERTY_SERVICE_TAGS,
+	'package_name' => 'tags',
+	'package_path' => dirname( __FILE__ ).'/',
+	'service' => LIBERTY_SERVICE_TAGS,
 );
 $gBitSystem->registerPackage( $registerHash );
 
 if( $gBitSystem->isPackageActive( 'tags' ) && $gBitUser->hasPermission( 'p_tags_view' )) {
+	// load css file
+	$gBitThemes->loadCss( TAGS_PKG_PATH.'templates/tags.css' );
+
 	require_once( TAGS_PKG_PATH.'LibertyTag.php' );
 
 	$menuHash = array(
