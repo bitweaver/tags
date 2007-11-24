@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_tags/admin/admin_tags_inc.php,v 1.3 2007/03/22 20:45:49 nickpalmer Exp $
+// $Header: /cvsroot/bitweaver/_bit_tags/admin/admin_tags_inc.php,v 1.4 2007/11/24 06:31:53 laetzer Exp $
 // Copyright (c) 2005 bitweaver Tags
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -63,8 +63,48 @@ $formTagsStripOptions = array(
 );
 $gBitSmarty->assign( 'formTagsStripOptions', $formTagsStripOptions );
 
+$formTagLists = array(
+	"tags_list_id" => array(
+		'label' => 'ID',
+		'note' => 'Content ID',
+		'type' => 'toggle',
+	),
+	"tags_list_title" => array(
+		'label' => 'Title',
+		'note' => 'content title',
+		'type' => 'toggle',
+	),
+	"tags_list_type" => array(
+		'label' => 'Type',
+		'note' => 'content type',
+		'type' => 'toggle',
+	),
+	"tags_list_author" => array(
+		'label' => 'Author',
+		'note' => 'author of tagged content',
+		'type' => 'toggle',
+	),
+	"tags_list_editor" => array(
+		'label' => 'Editor',
+		'note' => 'last editor',
+		'type' => 'toggle',
+	),
+	"tags_list_lastmodif" => array(
+		'label' => 'last modified',
+		'note' => 'modification date',
+		'type' => 'toggle',
+	),
+	"tags_list_ip" => array(
+		'label' => 'IP',
+		'note' => 'editor\'s IP',
+		'type' => 'toggle',
+	),
+);
+$gBitSmarty->assign( 'formTagLists',$formTagLists );
+
+
 if( !empty( $_REQUEST['tags_preferences'] ) ) {
-	$tags = array_merge($formTagsDisplayOptions, $formTagsStripOptions);
+	$tags = array_merge($formTagsDisplayOptions, $formTagsStripOptions, $formTagLists);
 	//	$tags = array_merge( $formTagsOptions );
 	foreach( $tags as $item => $data ) {
 		if( $data['type'] == 'numeric' ) {

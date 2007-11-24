@@ -27,26 +27,58 @@
 
 		<table class="data">
 			<caption>{tr}Available Content{/tr} <span class="total">[ {$listInfo.total_records} ]</span></caption>
-			<tr>
-				<th style="width:2%;">{smartlink ititle="ID" tags=$tagsReq isort=content_id list_page=$listInfo.current_page user_id=$user_id content_type_guid=$contentSelect find=$listInfo.find}</th>
-				<th>{smartlink ititle="Title" tags=$tagsReq isort=title list_page=$listInfo.current_page user_id=$user_id content_type_guid=$contentSelect find=$listInfo.find idefault=1}</th>
-				<th>{smartlink ititle="Content Type" tags=$tagsReq isort=content_type_guid list_page=$listInfo.current_page user_id=$user_id content_type_guid=$contentSelect find=$listInfo.find}</th>
-				<th>{smartlink ititle="Author" tags=$tagsReq isort=$isort_author list_page=$listInfo.current_page user_id=$user_id content_type_guid=$contentSelect find=$listInfo.find}</th>
-				<th>{smartlink ititle="Most recent editor" tags=$tagsReq isort=$isort_editor list_page=$listInfo.current_page user_id=$user_id content_type_guid=$contentSelect find=$listInfo.find}</th>
-				<th>{smartlink ititle="Last Modified" tags=$tagsReq isort=last_modified list_page=$listInfo.current_page user_id=$user_id content_type_guid=$content_type_guids find=$listInfo.find}</th>
-				<th>{smartlink ititle="IP" tags=$tagsReq isort=ip list_page=$listInfo.current_page user_id=$user_id content_type_guid=$contentSelect find=$listInfo.find}</th>				
-			</tr>
-			{foreach from=$contentList item=item}
-				<tr class="{cycle values='odd,even'}">
-					<td style="text-align:right;">{$item.content_id}</td>
-					<td>{$item.display_link}</td>
-					<td>{assign var=content_type_guid value=`$item.content_type_guid`}{$contentTypes.$content_type_guid}</td>
-					<td>{displayname real_name=$item.creator_real_name user=$item.creator_user}</td>
-					<td style="text-align:left;">{displayname real_name=$item.modifier_real_name user=$item.modifier_user}</td>
-					<td style="text-align:center;">{$item.last_modified|bit_short_date}</td>
-					<td style="text-align:center;">{$item.ip}</td>
+			<thead>
+				<tr>
+					{if $gBitSystem->isFeatureActive( 'tags_list_id' )}
+						<th style="width:2%;">{smartlink ititle="ID" tags=$tagsReq isort=content_id list_page=$listInfo.current_page user_id=$user_id content_type_guid=$contentSelect find=$listInfo.find}</th>
+					{/if}
+					{if $gBitSystem->isFeatureActive( 'tags_list_title' )}
+						<th>{smartlink ititle="Title" tags=$tagsReq isort=title list_page=$listInfo.current_page user_id=$user_id content_type_guid=$contentSelect find=$listInfo.find idefault=1}</th>
+					{/if}
+					{if $gBitSystem->isFeatureActive( 'tags_list_type' )}
+						<th>{smartlink ititle="Content Type" tags=$tagsReq isort=content_type_guid list_page=$listInfo.current_page user_id=$user_id content_type_guid=$contentSelect find=$listInfo.find}</th>
+					{/if}
+					{if $gBitSystem->isFeatureActive( 'tags_list_author' )}
+						<th>{smartlink ititle="Author" tags=$tagsReq isort=$isort_author list_page=$listInfo.current_page user_id=$user_id content_type_guid=$contentSelect find=$listInfo.find}</th>
+					{/if}
+					{if $gBitSystem->isFeatureActive( 'tags_list_editor' )}
+						<th>{smartlink ititle="Most recent editor" tags=$tagsReq isort=$isort_editor list_page=$listInfo.current_page user_id=$user_id content_type_guid=$contentSelect find=$listInfo.find}</th>
+					{/if}
+					{if $gBitSystem->isFeatureActive( 'tags_list_lastmodif' )}
+						<th>{smartlink ititle="Last Modified" tags=$tagsReq isort=last_modified list_page=$listInfo.current_page user_id=$user_id content_type_guid=$content_type_guids find=$listInfo.find}</th>
+					{/if}
+					{if $gBitSystem->isFeatureActive( 'tags_list_ip' )}
+						<th>{smartlink ititle="IP" tags=$tagsReq isort=ip list_page=$listInfo.current_page user_id=$user_id content_type_guid=$contentSelect find=$listInfo.find}</th>				
+					{/if}
 				</tr>
-			{/foreach}
+			</thead>
+			<tbody>
+				{foreach from=$contentList item=item}
+					<tr class="{cycle values='odd,even'}">
+						{if $gBitSystem->isFeatureActive( 'tags_list_id' )}
+							<td style="text-align:right;">{$item.content_id}</td>
+						{/if}
+						{if $gBitSystem->isFeatureActive( 'tags_list_title' )}
+							<td>{$item.display_link}</td>
+						{/if}
+						{if $gBitSystem->isFeatureActive( 'tags_list_type' )}
+							<td>{assign var=content_type_guid value=`$item.content_type_guid`}{$contentTypes.$content_type_guid}</td>
+						{/if}
+						{if $gBitSystem->isFeatureActive( 'tags_list_author' )}
+							<td>{displayname real_name=$item.creator_real_name user=$item.creator_user}</td>
+						{/if}
+						{if $gBitSystem->isFeatureActive( 'tags_list_editor' )}
+							<td style="text-align:left;">{displayname real_name=$item.modifier_real_name user=$item.modifier_user}</td>
+						{/if}
+						{if $gBitSystem->isFeatureActive( 'tags_list_lastmodif' )}
+							<td style="text-align:center;">{$item.last_modified|bit_short_date}</td>
+						{/if}
+						{if $gBitSystem->isFeatureActive( 'tags_list_ip' )}
+							<td style="text-align:center;">{$item.ip}</td>
+						{/if}
+					</tr>
+				{/foreach}
+			</tbody>
 		</table>
 
 		{pagination tags=$tagsReq}

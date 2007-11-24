@@ -66,6 +66,24 @@
 		{/legend}
 		{/jstab}
 *}
+	{jstab title="List Settings"}
+		{form legend="List Settings"}
+			<input type="hidden" name="page" value="{$page}" />
+
+			{foreach from=$formTagLists key=item item=output}
+				<div class="row">
+					{formlabel label=`$output.label` for=$item}
+					{forminput}
+						{html_checkboxes name="$item" values="y" checked=$gBitSystem->getConfig($item) labels=false id=$item}
+						{formhelp note=`$output.note` page=`$output.page`}
+					{/forminput}
+				</div>
+			{/foreach}
+
+		{/form}
+	{/jstab}
+
+
 	{/jstabs}
 	<div class="row submit">
 		<input type="submit" name="tags_preferences" value="{tr}Change preferences{/tr}" />
