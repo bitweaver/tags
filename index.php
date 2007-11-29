@@ -15,7 +15,7 @@ $tagHash = $_REQUEST;
 $gBitSmarty->assign( 'cloud', TRUE );
 
 if( isset($_REQUEST['tags']) ){
-	$listData = $tag->getContentList( $listHash );
+	$listData = $tag->assignContentList( $listHash );
 	$tagData = $tag->getList( $tagHash );
 	$gBitSmarty->assign( 'tagData', $tagData["data"] );
 	$gBitSmarty->assign( 'tagsReq', $_REQUEST['tags'] );

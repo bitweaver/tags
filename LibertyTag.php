@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_tags/LibertyTag.php,v 1.31 2007/06/22 11:15:08 lsces Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_tags/LibertyTag.php,v 1.32 2007/11/29 17:20:37 spiderr Exp $
  * @package tags
  * 
  * @copyright Copyright (c) 2004-2006, bitweaver.org
@@ -521,13 +521,32 @@ class LibertyTag extends LibertyBase {
 	/**
 	* This function gets all content by matching to any tag passed in a group of tags, eliminates dupe records
 	**/
-	function getContentList(&$pParamHash){
+	function assignContentList(&$pParamHash){
 		global $gBitSystem, $gBitSmarty;
-		$_REQUEST['output'] = 'raw';
-		include_once( LIBERTY_PKG_PATH.'list_content.php' );
+
+		$gBitSystem->verifyPermission( 'p_tags_view' );
+
+		// some content specific offsets and pagination settings
+		if( !empty( $pParamHash['sort_mode'] )) {
+			$content_sort_mode = $pParamHash['sort_mode'];
+			$gBitSmarty->assign( 'sort_mode', $content_sort_mode );
+		}
+
+		$max_content = ( !empty( $pParamHash['max_records'] )) ? $pParamHash['max_records'] : $gBitSystem->getConfig( 'max_records' );
+		$gBitSmarty->assign( 'user_id', @BitBase::verifyId( $pParamHash['user_id'] ) ? $pParamHash['user_id'] : NULL );
+
+		// now that we have all the offsets, we can get the content list
+		include_once( LIBERTY_PKG_PATH.'get_content_list_inc.php' );
+
+		$gBitSmarty->assign( 'contentSelect', $contentSelect );
+		$gBitSmarty->assign( 'contentTypes', $contentTypes );
+		$contentList['listInfo']['parameters']['content_type_guid'] = $contentSelect;
+		$gBitSmarty->assign( 'listInfo', $contentList['listInfo'] );
+		$gBitSmarty->assign( 'content_type_guids', ( isset( $pParamHash['content_type_guid'] ) ? $pParamHash['content_type_guid'] : NULL ));
+
 		if ( isset($pParamHash['matchtags']) && $pParamHash['matchtags'] == 'all'){
 			//need some sort of matching function
-		}else{
+		} else {
 			//match on any tags
 			$distinctdata = $this->array_distinct( $contentList["data"], 'content_id' );
 			$distinctdata = array_merge($distinctdata);

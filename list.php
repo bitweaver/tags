@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_tags/list.php,v 1.3 2007/06/22 09:01:28 lsces Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_tags/list.php,v 1.4 2007/11/29 17:20:37 spiderr Exp $
  * @package tags
  * @subpackage functions
  * 
@@ -54,7 +54,7 @@ $listHash = $_REQUEST;
 $tagHash = $_REQUEST;
 
 if( isset($_REQUEST['tags']) ){
-	$listData = $tag->getContentList( $listHash );
+	$listData = $tag->assignContentList( $listHash );
 	$tagData = $tag->getList( $tagHash );
 	$gBitSmarty->assign( 'tagData', $tagData["data"] );
 	$gBitSmarty->assign( 'tagsReq', $_REQUEST['tags'] );
