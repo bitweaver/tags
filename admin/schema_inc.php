@@ -30,13 +30,10 @@ $gBitInstaller->registerPackageInfo( TAGS_PKG_NAME, array(
 
 $gBitInstaller->registerPreferences( TAGS_PKG_NAME, array(
 	array( TAGS_PKG_NAME, 'tags_in_view', 'y' ),
-	//	array( TAGS_PKG_NAME, 'tags_in_nav', 'n' ),
-	//	array( TAGS_PKG_NAME, 'tags_in_body', 'n' ),
-	//	array( TAGS_PKG_NAME, 'tags_lowercase 'n'),
-	//	array( TAGS_PKG_NAME, 'tags_strip_spaces 'n'),
-	//	array( TAGS_PKG_NAME, 'tags_strip_nonword 'n'),
-	//	array( TAGS_PKG_NAME, 'tags_strip_regexp ''),
-	//	array( TAGS_PKG_NAME, 'tags_strip_replace ''),
+		array( TAGS_PKG_NAME, 'tags_list_title', 'y' ),
+		array( TAGS_PKG_NAME, 'tags_list_type', 'y' ),
+		array( TAGS_PKG_NAME, 'tags_list_author', 'y' ),
+		array( TAGS_PKG_NAME, 'tags_list_lastmodif', 'y' ),
 ) );
 
 // ### Sequences
