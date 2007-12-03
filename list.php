@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_tags/list.php,v 1.4 2007/11/29 17:20:37 spiderr Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_tags/list.php,v 1.5 2007/12/03 18:08:10 spiderr Exp $
  * @package tags
  * @subpackage functions
  * 
@@ -28,8 +28,7 @@ if( !empty( $_REQUEST['action'] ) ) {
 		
 		if( isset( $_REQUEST["confirm"] ) ) {
 			if( $tmpTag->expunge( $tmpTag->mInfo['tag_id'] ) ) {
-				header( "Location: ".TAGS_PKG_URL.'list.php?status_id='.( !empty( $_REQUEST['status_id'] ) ? $_REQUEST['status_id'] : '' ) );
-				die;
+				bit_redirect( TAGS_PKG_URL.'list.php?status_id='.( !empty( $_REQUEST['status_id'] ) ? $_REQUEST['status_id'] : '' ) );
 			} else {
 				$feedback['error'] = $tmpTag->mErrors;
 			}

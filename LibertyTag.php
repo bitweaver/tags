@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_tags/LibertyTag.php,v 1.32 2007/11/29 17:20:37 spiderr Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_tags/LibertyTag.php,v 1.33 2007/12/03 18:08:10 spiderr Exp $
  * @package tags
  * 
  * @copyright Copyright (c) 2004-2006, bitweaver.org
@@ -356,10 +356,15 @@ class LibertyTag extends LibertyBase {
 	function expungeTags($pContentId, $pTagIdArray) {
 		if (LibertyContent::verifyId($pContentId)) {
 			$this->mDb->StartTrans();
-			$query = "DELETE FROM `".BIT_DB_PREFIX."tags_content_map` WHERE `content_id` = ? AND tag_id IN (".implode( ',',array_fill( 0,count( $pTagIdArray ),'?' ) )." )";
+			$query = "DELETE FROM `".BIT_DB_PREFIX."tags_content_map` WHERE `content_id` = ? AND `tag_id` IN (".implode( ',',array_fill( 0,count( $pTagIdArray ),'?' ) )." )";
 			$bind[] = $pContentId;
 			$bind = array_merge($bind, $pTagIdArray);
 			$result = $this->mDb->query( $query, $bind );
+			foreach( $pTagIdArray as $tagId ) {
+				if( !$this->mDb->getOne( "SELECT COUNT(*) FROM `".BIT_DB_PREFIX."tags_content_map` WHERE `tag_id`=?", array( $tagId ) ) ) {
+					$this->expunge( $tagId );
+				}
+			}
 			$this->mDb->CompleteTrans();
 		}
 	}
