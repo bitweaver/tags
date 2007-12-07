@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_tags/LibertyTag.php,v 1.33 2007/12/03 18:08:10 spiderr Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_tags/LibertyTag.php,v 1.34 2007/12/07 23:27:42 wjames5 Exp $
  * @package tags
  * 
  * @copyright Copyright (c) 2004-2006, bitweaver.org
@@ -624,7 +624,7 @@ function tags_content_list_sql( &$pObject, $pParamHash = NULL ) {
 	global $gBitSystem;
 	$ret = array();
 
-	if (isset($pParamHash['tags'])){
+	if (isset($pParamHash['tags']) && !empty($pParamHash['tags'])){
 		$ret['select_sql'] = ", tgc.`tag_id`, tgc.`tagger_id`, tgc.`tagged_on`";
 		$ret['join_sql'] = " INNER JOIN `".BIT_DB_PREFIX."tags_content_map` tgc ON ( lc.`content_id`=tgc.`content_id` )
 							 INNER JOIN `".BIT_DB_PREFIX."tags` tg ON ( tg.`tag_id`=tgc.`tag_id` )";
