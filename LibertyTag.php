@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_tags/LibertyTag.php,v 1.34 2007/12/07 23:27:42 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_tags/LibertyTag.php,v 1.35 2008/01/16 15:44:59 nickpalmer Exp $
  * @package tags
  * 
  * @copyright Copyright (c) 2004-2006, bitweaver.org
@@ -256,16 +256,21 @@ class LibertyTag extends LibertyBase {
 			}
 
 			foreach( $tagIds as $value ) {
-				$value = LibertyTag::sanitizeTag($value);
+				$value = trim($value);
+				/* Ignore empty tags like a trailing , generate */
 				if( !empty($value) ) {
-					array_push( $pParamHash['map_store'], array(
-						'tag' => $value,
-						'tagged_on' => $timeStamp,
-						'content_id' => $this->mContentId,
-						'user_id' => $gBitUser->mUserId,
-					));
-				} else {
-					$this->mErrors[$value] = "Invalid tag.";
+					$value = LibertyTag::sanitizeTag($value);
+					if ( !empty($value) ) {
+						array_push( $pParamHash['map_store'], array(
+										'tag' => $value,
+										'tagged_on' => $timeStamp,
+										'content_id' => $this->mContentId,
+										'user_id' => $gBitUser->mUserId,
+										));
+					}
+					else {
+						$this->mErrors[$value] = "Invalid tag.";
+					}
 				}
 			}
 		}
