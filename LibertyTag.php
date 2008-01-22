@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_tags/LibertyTag.php,v 1.35 2008/01/16 15:44:59 nickpalmer Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_tags/LibertyTag.php,v 1.36 2008/01/22 16:27:39 wjames5 Exp $
  * @package tags
  * 
  * @copyright Copyright (c) 2004-2006, bitweaver.org
@@ -432,7 +432,8 @@ class LibertyTag extends LibertyBase {
 
 		// get all tags
 		$query = "
-			SELECT tg.*
+			SELECT tg.*,
+				( SELECT COUNT(*) FROM `".BIT_DB_PREFIX."tags_content_map` tgc WHERE tgc.`tag_id` = tg.`tag_id` ) AS popcant
 				$selectSql
 			FROM `".BIT_DB_PREFIX."tags` tg
 				$joinSql
@@ -448,7 +449,8 @@ class LibertyTag extends LibertyBase {
 		$ret = array();
 
 		while ($res = $result->fetchRow()) {
-			$res['popcant'] = $this->getPopCount($res['tag_id']);
+			// this was really sucky, its now replaced by the slightly lesssucky subselect above. the subselect should prolly be replaced with a count table
+//			$res['popcant'] = $this->getPopCount($res['tag_id']);
 			$ret[] = $res;
 		}
 
