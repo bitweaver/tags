@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_tags/LibertyTag.php,v 1.36 2008/01/22 16:27:39 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_tags/LibertyTag.php,v 1.37 2008/06/15 15:08:48 wjames5 Exp $
  * @package tags
  * 
  * @copyright Copyright (c) 2004-2006, bitweaver.org
@@ -701,6 +701,7 @@ function tags_content_store( &$pObject, &$pParamHash ) {
 
 function tags_content_preview( &$pObject) {
 	global $gBitUser, $gBitSystem, $gBitSmarty;
+	tags_content_edit( $pObject );
 	if( $gBitUser->hasPermission( 'p_tags_create' ) ) {
 		if ( $gBitSystem->isPackageActive( 'tags' ) ) {
 			if (isset($_REQUEST['tags'])) {
