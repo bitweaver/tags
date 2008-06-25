@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_tags/list.php,v 1.5 2007/12/03 18:08:10 spiderr Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_tags/list.php,v 1.6 2008/06/25 22:21:25 spiderr Exp $
  * @package tags
  * @subpackage functions
  * 
@@ -57,10 +57,10 @@ if( isset($_REQUEST['tags']) ){
 	$tagData = $tag->getList( $tagHash );
 	$gBitSmarty->assign( 'tagData', $tagData["data"] );
 	$gBitSmarty->assign( 'tagsReq', $_REQUEST['tags'] );
-	$gBitSystem->display( 'bitpackage:tags/list_content.tpl', tra( 'Tagged Content' ) );
+	$gBitSystem->display( 'bitpackage:tags/list_content.tpl', tra( 'Tagged Content' ) , array( 'display_mode' => 'list' ));
 }else{
 	$listData = $tag->getList( $listHash );
 	$gBitSmarty->assign( 'tagData', $listData["data"] );
-	$gBitSystem->display( 'bitpackage:tags/list_tags.tpl', tra( 'Tags' ) );
+	$gBitSystem->display( 'bitpackage:tags/list_tags.tpl', tra( 'Tags' ) , array( 'display_mode' => 'list' ));
 }
 ?>

@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_tags/edit.php,v 1.3 2007/06/22 09:01:27 lsces Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_tags/edit.php,v 1.4 2008/06/25 22:21:25 spiderr Exp $
  * @package tags
  * @subpackage functions
  * 
@@ -33,5 +33,5 @@ if( !empty( $_REQUEST["save"] ) ) {
 	}
 }
 
-$gBitSystem->display( 'bitpackage:tags/edit_tag.tpl', tra( "Edit Tag" ) );
+$gBitSystem->display( 'bitpackage:tags/edit_tag.tpl', tra( "Edit Tag" ) , array( 'display_mode' => 'edit' ));
 ?>

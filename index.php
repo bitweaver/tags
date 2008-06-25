@@ -19,10 +19,10 @@ if( isset($_REQUEST['tags']) ){
 	$tagData = $tag->getList( $tagHash );
 	$gBitSmarty->assign( 'tagData', $tagData["data"] );
 	$gBitSmarty->assign( 'tagsReq', $_REQUEST['tags'] );
-	$gBitSystem->display( 'bitpackage:tags/list_content.tpl', tra( 'Tagged Content' ) );
+	$gBitSystem->display( 'bitpackage:tags/list_content.tpl', tra( 'Tagged Content' ) , array( 'display_mode' => 'display' ));
 }else{
 	$listData = $tag->getList( $listHash );
 	$gBitSmarty->assign( 'tagData', $listData["data"] );
-	$gBitSystem->display( 'bitpackage:tags/list_tags.tpl', tra( 'Tags' ) );
+	$gBitSystem->display( 'bitpackage:tags/list_tags.tpl', tra( 'Tags' ) , array( 'display_mode' => 'display' ));
 }
 ?>
