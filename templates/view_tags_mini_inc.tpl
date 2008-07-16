@@ -6,7 +6,7 @@
 		<strong>{tr}Tags:{/tr}</strong>&nbsp;
 		{section name=tag loop=$tagData}
 			{if $smarty.section.tag.index > 0},&nbsp;{/if}
-			<a href="{$smarty.const.TAGS_PKG_URL}index.php?tags={$tagData[tag].tag}">{$tagData[tag].tag}</a>
+			<a href="{$tagData[tag].tag_url}">{$tagData[tag].tag}</a>
 			{if $gContent->isOwner() || $gBitUser->hasPermission('p_tags_admin')}
 				<input type="checkbox" name="tag_id[]" value="{$tagData[tag].tag_id}" />
 				<input type="hidden" name="tag_{$tagData[tag].tag_id}" value="{$tagData[tag].tag}" />

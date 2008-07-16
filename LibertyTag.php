@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_tags/LibertyTag.php,v 1.37 2008/06/15 15:08:48 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_tags/LibertyTag.php,v 1.38 2008/07/16 11:10:10 huyderman Exp $
  * @package tags
  * 
  * @copyright Copyright (c) 2004-2006, bitweaver.org
@@ -59,6 +59,9 @@ class LibertyTag extends LibertyBase {
 			if ($result) {
 				$ret = array();
 				while ($res = $result->fetchRow()) {
+					//Add tag urls
+					$res['tag_url'] = LibertyTag::getDisplayUrl($res['tag']);
+					
 					$ret[] = $res;
 				}
 				$this->mInfo['tags'] = $ret;
@@ -66,7 +69,6 @@ class LibertyTag extends LibertyBase {
 		}
 		return( count( $this->mInfo ) );
 	}
-
 
 	function loadTag ( &$pParamHash ){
 		if( !empty( $pParamHash['tag_id'] ) && is_numeric( $pParamHash['tag_id'] )) {
@@ -82,6 +84,9 @@ class LibertyTag extends LibertyBase {
 					$whereSql";
 
 			if ( $result = $this->mDb->getRow( $query, $bindVars ) ){
+				//Add tag url
+				$result['tag_url'] = LibertyTag::getDisplayUrl($result['tag']);
+					
 				$this->mInfo = $result;
 			};
 		}
@@ -373,6 +378,17 @@ class LibertyTag extends LibertyBase {
 			$this->mDb->CompleteTrans();
 		}
 	}
+	
+	function getDisplayUrl($tag){
+		global $gBitSystem;
+		if( $gBitSystem->isFeatureActive( 'pretty_urls' ) || $gBitSystem->isFeatureActive( 'pretty_urls_extended' ) ) {
+			$rewrite_tag = $gBitSystem->isFeatureActive( 'pretty_urls_extended' ) ? 'view/':'';
+			$tag_url = TAGS_PKG_URL.$rewrite_tag.urlencode( $tag );
+		} else {
+			$tag_url = TAGS_PKG_URL.'index.php?tags='.urlencode( $tag );
+		}
+		return $tag_url;
+	}
 
 	/**
 	* This function gets a list of tags
@@ -451,6 +467,7 @@ class LibertyTag extends LibertyBase {
 		while ($res = $result->fetchRow()) {
 			// this was really sucky, its now replaced by the slightly lesssucky subselect above. the subselect should prolly be replaced with a count table
 //			$res['popcant'] = $this->getPopCount($res['tag_id']);
+			$res['tag_url'] = LibertyTag::getDisplayUrl($res['tag']);
 			$ret[] = $res;
 		}
 

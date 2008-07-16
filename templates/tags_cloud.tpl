@@ -3,7 +3,7 @@
 	<ul id="cloud">
 		{foreach item=tag from=$tagData}
 			<li class="tag{$tag.tagscale}">
-				<a href="{$smarty.const.TAGS_PKG_URL}index.php?tags={$tag.tag|escape:"url"}">{$tag.tag}</a>&nbsp;<small>({$tag.popcant})</small>
+				<a href="{$tag.tag_url}">{$tag.tag}</a>&nbsp;<small>({$tag.popcant})</small>
 			</li>
 		{/foreach}
 	</ul>

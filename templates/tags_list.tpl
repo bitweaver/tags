@@ -10,7 +10,7 @@
 		{foreach item=tag from=$tagData}
 			<tr class="{cycle}">
 				<td>
-					<strong><a href="{$smarty.const.TAGS_PKG_URL}index.php?tags={$tag.tag}">{$tag.tag}</a></strong>
+					<strong><a href="{$tag.tag_url}">{$tag.tag}</a></strong>
 				</td>
 				<td style="text-align:center;">
 					{$tag.popcant}
