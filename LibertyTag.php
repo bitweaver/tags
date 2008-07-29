@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_tags/LibertyTag.php,v 1.38 2008/07/16 11:10:10 huyderman Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_tags/LibertyTag.php,v 1.39 2008/07/29 18:06:16 lsces Exp $
  * @package tags
  * 
  * @copyright Copyright (c) 2004-2006, bitweaver.org
@@ -569,15 +569,15 @@ class LibertyTag extends LibertyBase {
 
 		$gBitSmarty->assign( 'contentSelect', $contentSelect );
 		$gBitSmarty->assign( 'contentTypes', $contentTypes );
-		$contentList['listInfo']['parameters']['content_type_guid'] = $contentSelect;
-		$gBitSmarty->assign( 'listInfo', $contentList['listInfo'] );
+		$contentListHash['parameters']['content_type_guid'] = $contentSelect;
+		$gBitSmarty->assign( 'listInfo', $contentListHash );
 		$gBitSmarty->assign( 'content_type_guids', ( isset( $pParamHash['content_type_guid'] ) ? $pParamHash['content_type_guid'] : NULL ));
 
 		if ( isset($pParamHash['matchtags']) && $pParamHash['matchtags'] == 'all'){
 			//need some sort of matching function
 		} else {
 			//match on any tags
-			$distinctdata = $this->array_distinct( $contentList["data"], 'content_id' );
+			$distinctdata = $this->array_distinct( $contentList, 'content_id' );
 			$distinctdata = array_merge($distinctdata);
 		}
 		$gBitSmarty->assign_by_ref('contentList', $distinctdata);
