@@ -4,7 +4,7 @@
 		{formlabel label="Add Tags" for="tags"}
 		{forminput}
 			<input type="text" name="tags" id="tags" value="{if $tagList}{$tagList}{/if}" />
-		{formhelp note="Enter key words to describe your content. Separate each tag with a comma: , . Tag wisely, tag efficiently."}
+		{formhelp note="Enter key words to describe your content. Separate each tag with a comma: tag one,tag two."}
 		{/forminput}
 	</div>
 	{if count($tagData) > 0 }
