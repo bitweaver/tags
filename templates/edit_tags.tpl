@@ -7,6 +7,9 @@
 		{formhelp note="Enter key words to describe your content. Separate each tag with a comma: tag one,tag two."}
 		{/forminput}
 	</div>
+	<div class="row">
+		{jspopup notra=1 href=$smarty.const.TAGS_PKG_URL title="View all tags" width="null" height="null"}
+	</div>
 	{if count($tagData) > 0 }
 		<div class="row tags">
 			{forminput}
