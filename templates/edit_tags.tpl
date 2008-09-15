@@ -3,7 +3,7 @@
 	<div class="row">
 		{formlabel label="Add Tags" for="tags"}
 		{forminput}
-			<input type="text" name="tags" id="tags" value="{if $tagList}{$tagList}{/if}" />
+		<input type="text" name="tags" id="tags" value="{if $smarty.post.preview}{$smarty.post.tags}{elseif $tagList}{$tagList}{/if}" />
 		{formhelp note="Enter key words to describe your content. Separate each tag with a comma: tag one,tag two."}
 		{/forminput}
 	</div>
