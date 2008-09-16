@@ -10,7 +10,7 @@
 
 	<dt class="param"><kbd>sort_mode</kbd></dt>
 	<dd><em>{tr}String{/tr}</em></dd>
-	<dd><abbr class="default" title="default">tag_asc</abbr></dd>
+	<dd><abbr class="default" title="{tr}default{/tr}">tag_asc</abbr></dd>
 
 	<dt class="param"><kbd>user</kbd></dt>
 	<dd><em>{tr}Numeric{/tr}</em></dd>
