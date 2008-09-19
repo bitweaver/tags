@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_tags/list.php,v 1.6 2008/06/25 22:21:25 spiderr Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_tags/list.php,v 1.7 2008/09/19 01:34:38 laetzer Exp $
  * @package tags
  * @subpackage functions
  * 
@@ -20,7 +20,7 @@ $gBitSystem->verifyPackage( 'tags' );
 if( !empty( $_REQUEST['action'] ) ) {
 	if( $_REQUEST['action'] == 'remove' && !empty( $_REQUEST['tag_id'] ) ) {
 		if ( !$gBitUser->hasPermission('p_tags_remove') ){
-			$gBitSystem->fatalError( 'You do not have permission to remove Tags' );
+			$gBitSystem->fatalError( tra('You do not have permission to remove tags.') );
 		}
 		
 		$tmpTag = new LibertyTag();
@@ -39,9 +39,10 @@ if( !empty( $_REQUEST['action'] ) ) {
 		$formHash['status_id'] = ( !empty( $_REQUEST['status_id'] ) ? $_REQUEST['status_id'] : '' );
 		$formHash['tag_id'] = $_REQUEST['tag_id'];
 		$msgHash = array(
-			'label' => 'Remove Tag',
+			'label' => tra('Remove Tag'),
 			'confirm_item' => $tmpTag->mInfo['tag'],
-			'warning' => 'This will remove the above tag. This cannot be undone.',
+			'warning' => ('This will remove the above tag.'),
+			'error' => tra('This cannot be undone!'),
 		);
 		$gBitSystem->confirmDialog( $formHash, $msgHash );
 	}
