@@ -1,28 +1,17 @@
 {strip}
-{if $gContent->mContentTypeGuid != 'bitcomment' || $gBitSystem->isFeatureActive('tags_on_comments')}
+
+{if $loadTags}
+
 	<div class="row">
-		{formlabel label="Add Tags" for="tags"}
+		{formlabel label="Tags" for="tags"}
 		{forminput}
-		<input type="text" name="tags" id="tags" value="{if $smarty.post.preview}{$smarty.post.tags}{elseif $tagList}{$tagList}{/if}" />
-		{formhelp note="Enter key words to describe your content. Separate each tag with a comma: tag one,tag two."}
+			<input type="text" name="tags" id="tags" value="{if $preview}{$smarty.post.tags}{elseif $tagList}{$tagList}{/if}" />
+			<br />
+			{jspopup class="popup_link" href=$smarty.const.TAGS_PKG_URL title="View all tags" width="null" height="null"}
+			{formhelp note="Key words to describe the content, separated by commas: tag one, tag two."}
 		{/forminput}
 	</div>
-	<div class="row">
-		{forminput}
-			{jspopup notra=1 href=$smarty.const.TAGS_PKG_URL title="View all tags" width="null" height="null"}
-		{/forminput}
-	</div>
-	{if count($tagData) > 0 }
-		<div class="row tags">
-			{forminput}
-				<strong>{tr}Existing Tags:{/tr}</strong>&nbsp;
-				{section name=tag loop=$tagData}
-					{if $smarty.section.tag.index > 0},&nbsp;{/if}
-					<a href="{$smarty.const.TAGS_PKG_URL}index.php?tags={$tagData[tag].tag}">{$tagData[tag].tag}</a>
-				{/section}
-				{formhelp note="NOTE: To remove tags use the \"Drop Tag\" options that are available when just viewing this content."}
-			{/forminput}
-		</div>
-	{/if}
+	
 {/if}
+
 {/strip}

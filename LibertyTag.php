@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_tags/LibertyTag.php,v 1.39 2008/07/29 18:06:16 lsces Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_tags/LibertyTag.php,v 1.40 2008/10/18 23:27:52 laetzer Exp $
  * @package tags
  * 
  * @copyright Copyright (c) 2004-2006, bitweaver.org
@@ -630,11 +630,14 @@ class LibertyTag extends LibertyBase {
 /********* SERVICE FUNCTIONS *********/
 function tags_content_display( &$pObject ) {
 	global $gBitSystem, $gBitSmarty, $gBitUser;
-	if ( $gBitSystem->isPackageActive( 'tags' ) ) {
-		if( $gBitUser->hasPermission( 'p_tags_view' ) ) {
-			$tag = new LibertyTag( $pObject->mContentId );
-			if( $tag->load() ) {
-				$gBitSmarty->assign( 'tagData', !empty( $tag->mInfo['tags'] ) ? $tag->mInfo['tags'] : NULL );
+	
+	if( method_exists( $pObject, 'getContentType' ) && $gBitSystem->isFeatureActive( 'tags_tag_'.$pObject->getContentType()) ){
+		if ( $gBitSystem->isPackageActive( 'tags' ) ) {
+			if( $gBitUser->hasPermission( 'p_tags_view' ) ) {
+				$tag = new LibertyTag( $pObject->mContentId );
+				if( $tag->load() ) {
+					$gBitSmarty->assign( 'tagData', !empty( $tag->mInfo['tags'] ) ? $tag->mInfo['tags'] : NULL );
+				}
 			}
 		}
 	}
@@ -652,7 +655,7 @@ function tags_content_list_sql( &$pObject, $pParamHash = NULL ) {
 		$ret['select_sql'] = ", tgc.`tag_id`, tgc.`tagger_id`, tgc.`tagged_on`";
 		$ret['join_sql'] = " INNER JOIN `".BIT_DB_PREFIX."tags_content_map` tgc ON ( lc.`content_id`=tgc.`content_id` )
 							 INNER JOIN `".BIT_DB_PREFIX."tags` tg ON ( tg.`tag_id`=tgc.`tag_id` )";
-
+   	
 		$tagMixed = $pParamHash['tags']; //need to break up this string
 		if( !empty( $tagMixed )){
 			if (!is_array( $tagMixed ) && !is_numeric( $tagMixed ) ){
@@ -663,9 +666,9 @@ function tags_content_list_sql( &$pObject, $pParamHash = NULL ) {
 				$tagIds = array( $tagMixed );
 			}
 		}
-
+   	
 		$ret['where_sql'] = ' AND tg.`tag` IN ('.implode( ',', array_fill(0, count( $tagIds ), '?' ) ).')';
-
+   	
 		$ret['bind_vars'] = $tagIds;
 	}
 
@@ -674,29 +677,33 @@ function tags_content_list_sql( &$pObject, $pParamHash = NULL ) {
 
 function tags_content_edit( $pObject=NULL ) {
 	global $gBitSystem, $gBitSmarty, $gBitUser;
-	if ( $gBitSystem->isPackageActive( 'tags' ) ) {
-		$tag = new LibertyTag( $pObject->mContentId );
-		if( $gBitUser->hasPermission( 'p_tags_create' ) || $gBitUser->hasPermission( 'p_tag_edit' )) {
-			if( $tag->load() ) {
-				if ($gBitUser->hasPermission( 'p_tags_edit' )) {
-					$tags = array();
-					foreach ($tag->mInfo['tags'] as $t) {
-
-						if ($t['tagger_id'] == $gBitUser->mUserId) {
-							$tags[] = $t['tag'];
+	
+	if( method_exists( $pObject, 'getContentType' ) && $gBitSystem->isFeatureActive( 'tags_tag_'.$pObject->getContentType()) ){
+		if ( $gBitSystem->isPackageActive( 'tags' )) {
+			$tag = new LibertyTag( $pObject->mContentId );
+			if( $gBitUser->hasPermission( 'p_tags_create' ) || $gBitUser->hasPermission( 'p_tag_edit' )) {
+				if( $tag->load() ) {
+					if ($gBitUser->hasPermission( 'p_tags_edit' )) {
+						$tags = array();
+						foreach ($tag->mInfo['tags'] as $t) {
+    	
+							if ($t['tagger_id'] == $gBitUser->mUserId) {
+								$tags[] = $t['tag'];
+							}
 						}
+    	
+						$gBitSmarty->assign( 'loadTags', TRUE );
+						$gBitSmarty->assign( 'tagList', !empty( $tags ) ? implode(", ", $tags) : NULL );
 					}
-
-					$gBitSmarty->assign( 'tagList', !empty( $tags ) ? implode(", ", $tags) : NULL );
+					$gBitSmarty->assign( 'tagData', !empty( $tag->mInfo['tags'] ) ? $tag->mInfo['tags'] : NULL );
 				}
-				$gBitSmarty->assign( 'tagData', !empty( $tag->mInfo['tags'] ) ? $tag->mInfo['tags'] : NULL );
 			}
 		}
 	}
 }
 
 /**
- * @param includeds a string or array of 'tags' and contentid for association.
+ * @param includes a string or array of 'tags' and contentid for association.
  **/
 function tags_content_store( &$pObject, &$pParamHash ) {
 	global $gBitUser, $gBitSystem;

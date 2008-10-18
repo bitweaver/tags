@@ -1,23 +1,23 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_tags/admin/admin_tags_inc.php,v 1.4 2007/11/24 06:31:53 laetzer Exp $
+// $Header: /cvsroot/bitweaver/_bit_tags/admin/admin_tags_inc.php,v 1.5 2008/10/18 23:27:52 laetzer Exp $
 // Copyright (c) 2005 bitweaver Tags
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
 
 $formTagsDisplayOptions = array(
-	"tags_in_view" => array(
-		'label' => 'Tags In View',
-		'note' => 'Shows the tags in the "view" location',
-		'type' => 'toggle',
-	),
 	"tags_in_nav" => array(
-		'label' => 'Tags In Nav',
+		'label' => 'Nav',
 		'note' => 'Shows the tags in the "nav" location',
 		'type' => 'toggle',
 	),
 	"tags_in_body" => array(
-		'label' => 'Tags In Body',
+		'label' => 'Body',
 		'note' => 'Shows the tags in the "body" location',
+		'type' => 'toggle',
+	),
+	"tags_in_view" => array(
+		'label' => 'View',
+		'note' => 'Shows the tags in the "view" location',
 		'type' => 'toggle',
 	),
 );
@@ -102,6 +102,15 @@ $formTagLists = array(
 );
 $gBitSmarty->assign( 'formTagLists',$formTagLists );
 
+// list of content types that can be tagged
+// 'sample' is presented anyways, if sample package is installed
+// 'bitcomment' (?) ... isFeatureActive('tags_on_comments')
+$exclude = array( 'bituser', 'tikisticky', 'sample', 'bitcomment');
+foreach( $gLibertySystem->mContentTypes as $cType ) {
+	if( !in_array( $cType['content_type_guid'], $exclude ) ) {
+		$formTaggable['guids']['tags_tag_'.$cType['content_type_guid']]  = $cType['content_description'];
+	}
+}
 
 if( !empty( $_REQUEST['tags_preferences'] ) ) {
 	$tags = array_merge($formTagsDisplayOptions, $formTagsStripOptions, $formTagLists);
@@ -115,6 +124,19 @@ if( !empty( $_REQUEST['tags_preferences'] ) ) {
 			simple_set_value( $item, TAGS_PKG_NAME );
 		}
 	}
+	foreach( array_keys( $formTaggable['guids'] ) as $taggable ) {
+		$gBitSystem->storeConfig( $taggable, ( ( !empty( $_REQUEST['taggable_content'] ) && in_array( $taggable, $_REQUEST['taggable_content'] ) ) ? 'y' : NULL ), TAGS_PKG_NAME );
+	}
+
 }
+
+// check the correct packages in the package selection
+foreach( $gLibertySystem->mContentTypes as $cType ) {
+	if( $gBitSystem->getConfig( 'tags_tag_'.$cType['content_type_guid'] ) ) {
+		$formTaggable['checked'][] = 'tags_tag_'.$cType['content_type_guid'];
+	}
+}
+
+$gBitSmarty->assign( 'formTaggable', $formTaggable );
 
 ?>
