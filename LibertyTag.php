@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_tags/LibertyTag.php,v 1.41 2008/10/19 18:38:42 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_tags/LibertyTag.php,v 1.42 2008/10/19 18:59:36 wjames5 Exp $
  * @package tags
  * 
  * @copyright Copyright (c) 2004-2006, bitweaver.org
@@ -348,13 +348,19 @@ class LibertyTag extends LibertyBase {
 	/**
 	* This function removes all references to contentid from tags_content_map
 	**/
-	function expungeMyContentFromTagMap(){
+	function expungeMyContentFromTagMap( &$pObject ){
 		global $gBitUser;
 		$ret = FALSE;
 		if( $this->isValid() ) {
 			$this->mDb->StartTrans();
-			$query = "DELETE FROM `".BIT_DB_PREFIX."tags_content_map` WHERE `content_id` = ? AND tagger_id = ?";
-			$result = $this->mDb->query( $query, array( $this->mContentId, $gBitUser->mUserId  ) );
+			$whereSql = "";
+			$bindVars[] = $this->mContentId;
+			if( !$pObject->hasAdminPermission() ){
+				$whereSql .= " AND tagger_id = ?";
+				$bindVars[] = $gBitUser->mUserId;
+			}
+			$query = "DELETE FROM `".BIT_DB_PREFIX."tags_content_map` WHERE `content_id` = ? $whereSql";
+			$result = $this->mDb->query( $query, $bindVars );
 			$this->mDb->CompleteTrans();
 		}
 		return $ret;
@@ -713,7 +719,7 @@ function tags_content_store( &$pObject, &$pParamHash ) {
 		if( $gBitSystem->isPackageActive( 'tags' ) ) {
 			$tag = new LibertyTag( $pObject->mContentId );
 			if ( $gBitUser->hasPermission('p_tags_edit') ) {
-				$tag->expungeMyContentFromTagMap();
+				$tag->expungeMyContentFromTagMap( $pObject );
 			}
 			if ( !$tag->storeTags( $pParamHash ) ) {
 				$errors=$tag->mErrors;
