@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_tags/LibertyTag.php,v 1.40 2008/10/18 23:27:52 laetzer Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_tags/LibertyTag.php,v 1.41 2008/10/19 18:38:42 wjames5 Exp $
  * @package tags
  * 
  * @copyright Copyright (c) 2004-2006, bitweaver.org
@@ -687,7 +687,7 @@ function tags_content_edit( $pObject=NULL ) {
 						$tags = array();
 						foreach ($tag->mInfo['tags'] as $t) {
     	
-							if ($t['tagger_id'] == $gBitUser->mUserId) {
+							if ($t['tagger_id'] == $gBitUser->mUserId || $gBitUser->hasPermission('p_tags_admin') ) {
 								$tags[] = $t['tag'];
 							}
 						}
