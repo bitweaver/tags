@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_tags/list.php,v 1.7 2008/09/19 01:34:38 laetzer Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_tags/list.php,v 1.8 2008/10/20 21:40:11 spiderr Exp $
  * @package tags
  * @subpackage functions
  * 
@@ -19,7 +19,7 @@ $gBitSystem->verifyPackage( 'tags' );
 
 if( !empty( $_REQUEST['action'] ) ) {
 	if( $_REQUEST['action'] == 'remove' && !empty( $_REQUEST['tag_id'] ) ) {
-		if ( !$gBitUser->hasPermission('p_tags_remove') ){
+		if ( !$gBitUser->hasPermission('p_tags_moderate') ){
 			$gBitSystem->fatalError( tra('You do not have permission to remove tags.') );
 		}
 		

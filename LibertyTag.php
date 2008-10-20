@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_tags/LibertyTag.php,v 1.42 2008/10/19 18:59:36 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_tags/LibertyTag.php,v 1.43 2008/10/20 21:40:11 spiderr Exp $
  * @package tags
  * 
  * @copyright Copyright (c) 2004-2006, bitweaver.org
@@ -687,22 +687,17 @@ function tags_content_edit( $pObject=NULL ) {
 	if( method_exists( $pObject, 'getContentType' ) && $gBitSystem->isFeatureActive( 'tags_tag_'.$pObject->getContentType()) ){
 		if ( $gBitSystem->isPackageActive( 'tags' )) {
 			$tag = new LibertyTag( $pObject->mContentId );
-			if( $gBitUser->hasPermission( 'p_tags_create' ) || $gBitUser->hasPermission( 'p_tag_edit' )) {
-				if( $tag->load() ) {
-					if ($gBitUser->hasPermission( 'p_tags_edit' )) {
-						$tags = array();
-						foreach ($tag->mInfo['tags'] as $t) {
-    	
-							if ($t['tagger_id'] == $gBitUser->mUserId || $gBitUser->hasPermission('p_tags_admin') ) {
-								$tags[] = $t['tag'];
-							}
-						}
-    	
-						$gBitSmarty->assign( 'loadTags', TRUE );
-						$gBitSmarty->assign( 'tagList', !empty( $tags ) ? implode(", ", $tags) : NULL );
+			if( $tag->load() && ($pObject->hasUserPermission( 'p_tags_create' ) || $gBitUser->hasPermission( 'p_tags_moderate' )) ) {
+				$tags = array();
+				foreach ($tag->mInfo['tags'] as $t) {
+					if ($t['tagger_id'] == $gBitUser->mUserId || $gBitUser->hasPermission('p_tags_admin') ) {
+						$tags[] = $t['tag'];
 					}
-					$gBitSmarty->assign( 'tagData', !empty( $tag->mInfo['tags'] ) ? $tag->mInfo['tags'] : NULL );
 				}
+
+				$gBitSmarty->assign( 'loadTags', TRUE );
+				$gBitSmarty->assign( 'tagList', !empty( $tags ) ? implode(", ", $tags) : NULL );
+				$gBitSmarty->assign( 'tagData', !empty( $tag->mInfo['tags'] ) ? $tag->mInfo['tags'] : NULL );
 			}
 		}
 	}
@@ -718,7 +713,7 @@ function tags_content_store( &$pObject, &$pParamHash ) {
 		// If a content access system is active, let's call it
 		if( $gBitSystem->isPackageActive( 'tags' ) ) {
 			$tag = new LibertyTag( $pObject->mContentId );
-			if ( $gBitUser->hasPermission('p_tags_edit') ) {
+			if( $gBitUser->hasPermission('p_tags_create') ) {
 				$tag->expungeMyContentFromTagMap( $pObject );
 			}
 			if ( !$tag->storeTags( $pParamHash ) ) {

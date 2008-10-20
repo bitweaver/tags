@@ -16,11 +16,10 @@
 					{$tag.popcant}
 				</td>
 				<td class="actionicon">
-					{if $gBitUser->hasPermission( 'p_tags_edit' ) }
+					{if $gBitUser->hasPermission( 'p_tags_create' ) }
 						{smartlink ititle="Edit" ifile="edit.php" ibiticon="icons/accessories-text-editor" tag_id=$tag.tag_id}
 					{/if}
-
-					{if $gBitUser->hasPermission( 'p_tags_remove' )}
+					{if $gBitUser->hasPermission( 'p_tags_moderate' )}
 						{smartlink ititle="Remove" ibiticon="icons/edit-delete" action=remove tag_id=$tag.tag_id status_id=$smarty.request.status_id}
 					{/if}
 				</td>
