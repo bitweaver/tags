@@ -1,6 +1,6 @@
 {strip}
 
-{if $loadTags}
+{if $gContent->mContentTypeGuid != 'bitcomment' || $gBitSystem->isFeatureActive('tags_on_comments')}
 
 	<div class="row">
 		{formlabel label="Tags" for="tags"}
