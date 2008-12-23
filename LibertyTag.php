@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_tags/LibertyTag.php,v 1.43 2008/10/20 21:40:11 spiderr Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_tags/LibertyTag.php,v 1.44 2008/12/23 17:05:09 spiderr Exp $
  * @package tags
  * 
  * @copyright Copyright (c) 2004-2006, bitweaver.org
@@ -741,4 +741,14 @@ function tags_content_expunge( &$pObject ) {
 	$tag = new LibertyTag( $pObject->mContentId );
 	$tag->expungeContentFromTagMap();
 }
+
+// make sure all tags from a deleted user are nuked
+function tags_user_expunge( &$pObject ) {
+	if( is_a( $pObject, 'BitUser' ) && !empty( $pObject->mUserId ) ) {
+		$pObject->mDb->StartTrans();
+		$pObject->mDb->query( "DELETE FROM `".BIT_DB_PREFIX."tags_content_map` WHERE tagger_id=?", array( $pObject->mUserId ) );
+		$pObject->mDb->CompleteTrans();
+	}
+}
+
 ?>

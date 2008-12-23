@@ -32,6 +32,7 @@ if( $gBitSystem->isPackageActive( 'tags' ) && $gBitUser->hasPermission( 'p_tags_
 			'content_view_tpl'          => 'bitpackage:tags/view_tags_view.tpl',
 			'content_nav_tpl'           => 'bitpackage:tags/view_tags_nav.tpl',
 			'content_body_tpl'          => 'bitpackage:tags/view_tags_body.tpl',
+			'users_expunge_function'	=> 'tags_user_expunge'
 	) );
 }
 ?>
