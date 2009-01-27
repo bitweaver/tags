@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_tags/LibertyTag.php,v 1.44 2008/12/23 17:05:09 spiderr Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_tags/LibertyTag.php,v 1.45 2009/01/27 01:30:01 tekimaki_admin Exp $
  * @package tags
  * 
  * @copyright Copyright (c) 2004-2006, bitweaver.org
@@ -658,7 +658,8 @@ function tags_content_list_sql( &$pObject, $pParamHash = NULL ) {
 	$ret = array();
 
 	if (isset($pParamHash['tags']) && !empty($pParamHash['tags'])){
-		$ret['select_sql'] = ", tgc.`tag_id`, tgc.`tagger_id`, tgc.`tagged_on`";
+		/* slated for removal - makes no sense since content likely has multiple tags */
+		// $ret['select_sql'] = ", tgc.`tag_id`, tgc.`tagger_id`, tgc.`tagged_on`";
 		$ret['join_sql'] = " INNER JOIN `".BIT_DB_PREFIX."tags_content_map` tgc ON ( lc.`content_id`=tgc.`content_id` )
 							 INNER JOIN `".BIT_DB_PREFIX."tags` tg ON ( tg.`tag_id`=tgc.`tag_id` )";
    	
@@ -672,10 +673,20 @@ function tags_content_list_sql( &$pObject, $pParamHash = NULL ) {
 				$tagIds = array( $tagMixed );
 			}
 		}
+
+		$tags = array();
+		// strip off whitespace
+		foreach( $tagIds as $value ){
+			// ignore empty ones created by trailing ,'s
+			$value = trim( $value );
+			if( !empty($value) ) {
+				$tags[] = $value;
+			}
+		}
+
+		$ret['where_sql'] = ' AND tg.`tag` IN ('.implode( ',', array_fill(0, count( $tags ), '?' ) ).')';
    	
-		$ret['where_sql'] = ' AND tg.`tag` IN ('.implode( ',', array_fill(0, count( $tagIds ), '?' ) ).')';
-   	
-		$ret['bind_vars'] = $tagIds;
+		$ret['bind_vars'] = $tags;
 	}
 
 	return $ret;
