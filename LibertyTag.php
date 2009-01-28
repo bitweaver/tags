@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_tags/LibertyTag.php,v 1.45 2009/01/27 01:30:01 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_tags/LibertyTag.php,v 1.46 2009/01/28 21:29:11 tekimaki_admin Exp $
  * @package tags
  * 
  * @copyright Copyright (c) 2004-2006, bitweaver.org
@@ -653,7 +653,7 @@ function tags_content_display( &$pObject ) {
  * filter the search with pigeonholes
  * @param $pParamHash['tags']['filter'] - a tag or an array of tags
  **/
-function tags_content_list_sql( &$pObject, $pParamHash = NULL ) {
+function tags_content_list_sql( &$pObject, &$pParamHash = NULL ) {
 	global $gBitSystem;
 	$ret = array();
 
@@ -687,6 +687,10 @@ function tags_content_list_sql( &$pObject, $pParamHash = NULL ) {
 		$ret['where_sql'] = ' AND tg.`tag` IN ('.implode( ',', array_fill(0, count( $tags ), '?' ) ).')';
    	
 		$ret['bind_vars'] = $tags;
+
+		// return the values sent for pagination / url purposes
+		$pParamHash['listInfo']['tags'] = $pParamHash['tags'];
+		$pParamHash['listInfo']['ihash']['tags'] = $pParamHash['tags'];
 	}
 
 	return $ret;
