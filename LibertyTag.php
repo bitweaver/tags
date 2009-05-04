@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_tags/LibertyTag.php,v 1.46 2009/01/28 21:29:11 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_tags/LibertyTag.php,v 1.47 2009/05/04 12:35:37 lsces Exp $
  * @package tags
  * 
  * @copyright Copyright (c) 2004-2006, bitweaver.org
@@ -244,7 +244,7 @@ class LibertyTag extends LibertyBase {
 	function verifyTagsMap( &$pParamHash ) {
 		global $gBitUser, $gBitSystem;
 
-		$pParamHash['map_store'] = array();
+		$pParamHash['tag_map_store'] = array();
 
 		//this is to set the time we add content to a tag.
 		$timeStamp = $gBitSystem->getUTCTime();
@@ -266,7 +266,7 @@ class LibertyTag extends LibertyBase {
 				if( !empty($value) ) {
 					$value = LibertyTag::sanitizeTag($value);
 					if ( !empty($value) ) {
-						array_push( $pParamHash['map_store'], array(
+						array_push( $pParamHash['tag_map_store'], array(
 										'tag' => $value,
 										'tagged_on' => $timeStamp,
 										'content_id' => $this->mContentId,
@@ -293,7 +293,7 @@ class LibertyTag extends LibertyBase {
 		global $gBitSystem;
 		if( $this->verifyTagsMap( $pParamHash ) ) {
 			if( $this->isValid() ) {
-				foreach ( $pParamHash['map_store'] as $value) {
+				foreach ( $pParamHash['tag_map_store'] as $value) {
 					$result = $this->store( $value );
 				}
 				$this->load();
