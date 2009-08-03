@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_tags/LibertyTag.php,v 1.47 2009/05/04 12:35:37 lsces Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_tags/LibertyTag.php,v 1.48 2009/08/03 20:40:21 spiderr Exp $
  * @package tags
  * 
  * @copyright Copyright (c) 2004-2006, bitweaver.org
@@ -139,6 +139,12 @@ class LibertyTag extends LibertyBase {
 		$ret = FALSE;
 		$selectSql = ''; $joinSql = ''; $whereSql = '';
 		$bindVars = array();
+
+		// Bounds checking on tag name length
+		if( !empty( $pParamHash['tag'] ) && strlen( $pParamHash['tag'] ) > 64 ) {
+			$pParamHash['tag'] = substr( $pParamHash['tag'], 0, 64 );
+		}
+
 		// if tag_id supplied, use that
 		if( !empty( $pParamHash['tag_id'] ) && is_numeric( $pParamHash['tag_id'] )) {
 			$whereSql .= "WHERE tg.`tag_id` = ?";
@@ -148,11 +154,7 @@ class LibertyTag extends LibertyBase {
 			$bindVars[] = $pParamHash['tag'];
 		}
 
-		$query = "
-				SELECT tg.*
-				FROM `".BIT_DB_PREFIX."tags` tg
-				$whereSql";
-
+		$query = " SELECT tg.* FROM `".BIT_DB_PREFIX."tags` tg $whereSql";
 		if ( $result = $this->mDb->getRow( $query, $bindVars ) ){
 			$pParamHash['tag_id'] = $result['tag_id'];
 			$this->mTagId = $result['tag'];
