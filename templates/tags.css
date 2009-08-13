@@ -1,13 +1,16 @@
 #cloud			{margin:0; padding:0;}
 #cloud li		{display:inline; margin:0 .5em 0 0;}
-/*http://www.wolframalpha.com/input/?i=-10+*+%281.6+%5E+%28+-.6+*+x%29%29+%2B+10+for+x+%3D+1..10*/
-#cloud .tag1 a	{font-size:124%; font-weight:100;}
-#cloud .tag2 a	{font-size:143%; font-weight:200;}
-#cloud .tag3 a	{font-size:157%; font-weight:300;}
-#cloud .tag4 a	{font-size:167%; font-weight:400;}
-#cloud .tag5 a	{font-size:175%; font-weight:500;}
-#cloud .tag6 a	{font-size:181%; font-weight:600;}
-#cloud .tag7 a	{font-size:186%; font-weight:700;}
-#cloud .tag8 a	{font-size:190%; font-weight:800;}
-#cloud .tag9 a	{font-size:192%; font-weight:900;}
-#cloud .tag10 a	{font-size:194%; font-weight:900;}
+/*
+	Exponential weighted curve designed for most height variance in the low end
+	http://www.wolframalpha.com/input/?i=10+*+%28-10+*+%281.6+%5E+%28+-.6+*+x%29%29+%2B+10%29+%2B+75+for+x+%3D+1..10
+*/
+#cloud .tag1 a	{font-size:100%; font-weight:100;}
+#cloud .tag2 a	{font-size:118%; font-weight:200;}
+#cloud .tag3 a	{font-size:132%; font-weight:300;}
+#cloud .tag4 a	{font-size:142%; font-weight:400;}
+#cloud .tag5 a	{font-size:150%; font-weight:500;}
+#cloud .tag6 a	{font-size:156%; font-weight:600;}
+#cloud .tag7 a	{font-size:161%; font-weight:700;}
+#cloud .tag8 a	{font-size:164%; font-weight:800;}
+#cloud .tag9 a	{font-size:167%; font-weight:900;}
+#cloud .tag10 a	{font-size:169%; font-weight:900;}
