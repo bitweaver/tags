@@ -24,5 +24,6 @@ if( isset($_REQUEST['tags']) ){
 	$listData = $tag->getList( $listHash );
 	$gBitSmarty->assign( 'tagData', $listData["data"] );
 	$gBitSystem->display( 'bitpackage:tags/list_tags.tpl', tra( 'Tags' ) , array( 'display_mode' => 'display' ));
+	
 }
 ?>

@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_tags/LibertyTag.php,v 1.49 2009/08/13 16:56:06 tylerbello Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_tags/LibertyTag.php,v 1.50 2009/08/13 17:04:59 tylerbello Exp $
  * @package tags
  * 
  * @copyright Copyright (c) 2004-2006, bitweaver.org
@@ -414,6 +414,34 @@ class LibertyTag extends LibertyBase {
 		}else if( empty( $pParamHash['sort_mode'] ) ) {
 			$pParamHash['sort_mode'] = 'tag_asc';
 		}	
+
+		$sortHash = array(
+			'content_id_desc',
+			'content_id_asc',
+			'modifier_user_desc',
+			'modifier_user_asc',
+			'modifier_real_name_desc',
+			'modifier_real_name_asc',
+			'creator_user_desc',
+			'creator_user_asc',
+			'creator_real_name_desc',
+			'creator_real_name_asc',
+			'title_asc',
+			'title_desc',
+			'content_type_guid_asc',
+			'content_type_guid_desc',
+			'ip_asc',
+			'ip_desc',
+			'last_modified_asc',
+			'last_modified_desc',
+			'created_asc',
+			'created_desc',
+		);
+
+		if( empty( $pParamHash['sort_mode'] ) || in_array( $pParamHash['sort_mode'], $sortHash ) ) {
+			$pParamHash['sort_mode'] = 'tag_asc';
+		}
+
 		/**
 		* @TODO this all needs to go in in some other getList type method
 		* and these are just sketches - need to be different kinds of queries in most cases
