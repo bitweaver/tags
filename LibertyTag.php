@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_tags/LibertyTag.php,v 1.48 2009/08/03 20:40:21 spiderr Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_tags/LibertyTag.php,v 1.49 2009/08/13 16:56:06 tylerbello Exp $
  * @package tags
  * 
  * @copyright Copyright (c) 2004-2006, bitweaver.org
@@ -404,38 +404,16 @@ class LibertyTag extends LibertyBase {
 	function getList( &$pParamHash ) {
 		global $gBitUser, $gBitSystem;
 
-		$selectSql = ''; $joinSql = ''; $whereSql = '';
 		$bindVars = array();
-
+		$joinSql = !empty($pParamHash['join_sql']) ? $pParamHash['join_sql'] : '';
 		$sort_mode_prefix = 'tg';
-
-		$sortHash = array(
-			'content_id_desc',
-			'content_id_asc',
-			'modifier_user_desc',
-			'modifier_user_asc',
-			'modifier_real_name_desc',
-			'modifier_real_name_asc',
-			'creator_user_desc',
-			'creator_user_asc',
-			'creator_real_name_desc',
-			'creator_real_name_asc',
-			'title_asc',
-			'title_desc',
-			'content_type_guid_asc',
-			'content_type_guid_desc',
-			'ip_asc',
-			'ip_desc',
-			'last_modified_asc',
-			'last_modified_desc',
-			'created_asc',
-			'created_desc',
-		);
-
-		if( empty( $pParamHash['sort_mode'] ) || in_array( $pParamHash['sort_mode'], $sortHash ) ) {
-			$pParamHash['sort_mode'] = 'tag_asc';
-		}
+		//Backward compatability for most popular sort method
 		
+		if ( (isset($pParamHash['sort']) && $pParamHash['sort']=='mostpopular') ) {
+			$pParamHash['sort_mode'] = 'tag_count_desc';
+		}else if( empty( $pParamHash['sort_mode'] ) ) {
+			$pParamHash['sort_mode'] = 'tag_asc';
+		}	
 		/**
 		* @TODO this all needs to go in in some other getList type method
 		* and these are just sketches - need to be different kinds of queries in most cases
@@ -452,37 +430,35 @@ class LibertyTag extends LibertyBase {
 		}
 		*/
 
-		$sort_mode = $sort_mode_prefix . '.' . $this->mDb->convertSortmode( $pParamHash['sort_mode'] );
+		$sort_mode = $this->mDb->convertSortmode( $pParamHash['sort_mode'] );
 
 		// get all tags
 		$query = "
-			SELECT tg.*,
-				( SELECT COUNT(*) FROM `".BIT_DB_PREFIX."tags_content_map` tgc WHERE tgc.`tag_id` = tg.`tag_id` ) AS popcant
-				$selectSql
+			SELECT tg.`tag_id`, tg.`tag`, COUNT(tgc.`content_id`) AS tag_count
 			FROM `".BIT_DB_PREFIX."tags` tg
-				$joinSql
+				 INNER JOIN `".BIT_DB_PREFIX."tags_content_map` tgc ON ( tgc.`tag_id` = tg.`tag_id` ) 
+			$joinSql
+			GROUP BY tg.`tag_id`,tg.`tag`
 			ORDER BY $sort_mode";
 
 		$query_cant = "
 			SELECT COUNT( * )
-			FROM `".BIT_DB_PREFIX."tags` tg
-				$joinSql";
-
+			FROM `".BIT_DB_PREFIX."tags` tg";
 		$result = $this->mDb->query($query,$bindVars, ( !empty($pParamHash['max_records']) ? $pParamHash['max_records'] : NULL ));
 		$cant = $this->mDb->getOne($query_cant,$bindVars);
 		$ret = array();
 
 		while ($res = $result->fetchRow()) {
 			// this was really sucky, its now replaced by the slightly lesssucky subselect above. the subselect should prolly be replaced with a count table
-//			$res['popcant'] = $this->getPopCount($res['tag_id']);
+//			$res['tag_count'] = $this->getPopCount($res['tag_id']);
 			$res['tag_url'] = LibertyTag::getDisplayUrl($res['tag']);
 			$ret[] = $res;
 		}
 
 		//get keys for doing sorts
 		foreach ($ret as $key => $row) {
-		   $popcant[$key]  = $row['popcant'];
-		   $orderedcant[$key]  = $row['popcant'];
+		   $popcant[$key]  = $row['tag_count'];
+		   $orderedcant[$key]  = $row['tag_count'];
 		}
 
 		//this part creates the tag weight in a scale of 1-10
@@ -492,7 +468,6 @@ class LibertyTag extends LibertyBase {
 
 			$lowcant = $orderedcant[0];
 			$highcant = $orderedcant[ (count($orderedcant) - 1) ];
-
 			//hack to prevent us from dividing by zero - this whole weighting thing could use a slightly better formula
 			if ($highcant == $lowcant){$lowcant -= 1;}
 
@@ -509,14 +484,10 @@ class LibertyTag extends LibertyBase {
 			}
 			//3.  (n - low+1)*ratio  (n is # to be scaled)
 			foreach ($ret as $key => $row) {
-				$ret[$key]['tagscale']  = round((($row['popcant'] - $lowcant) * $tagscale) + 1, 0);
+				$ret[$key]['tagscale']  = round((($row['tag_count'] - $lowcant) * $tagscale) + 1, 0);
 			}
 		}
 
-		//if the user has asked to sort the tags by use we sort the array before returning it
-		if ( (isset($pParamHash['sort']) && $pParamHash['sort']=='mostpopular') ) {
-			array_multisort($popcant, SORT_DESC, $ret);
-		}
 		
 		//trim to max popular count if a limit is asked for
 		if ( isset($pParamHash["max_popular"]) && is_numeric($pParamHash["max_popular"])){
@@ -538,7 +509,7 @@ class LibertyTag extends LibertyBase {
  		
 		$pParamHash["data"] = $ret;
 		$pParamHash["cant"] = $cant;
-
+		
 		return $pParamHash;
 	}
 
