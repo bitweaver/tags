@@ -1,8 +1,8 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_tags/admin/admin_tags_inc.php,v 1.5 2008/10/18 23:27:52 laetzer Exp $
+// $Header: /cvsroot/bitweaver/_bit_tags/admin/admin_tags_inc.php,v 1.6 2009/10/01 13:45:49 wjames5 Exp $
 // Copyright (c) 2005 bitweaver Tags
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
-// Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
+// Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See http://www.gnu.org/copyleft/lesser.html for details.
 
 $formTagsDisplayOptions = array(
 	"tags_in_nav" => array(
