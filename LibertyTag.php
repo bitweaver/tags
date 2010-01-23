@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_tags/LibertyTag.php,v 1.52 2009/10/01 14:17:05 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_tags/LibertyTag.php,v 1.53 2010/01/23 18:20:29 spiderr Exp $
  * @package tags
  * 
  * @copyright Copyright (c) 2004-2006, bitweaver.org
@@ -406,6 +406,12 @@ class LibertyTag extends LibertyBase {
 
 		$bindVars = array();
 		$joinSql = !empty($pParamHash['join_sql']) ? $pParamHash['join_sql'] : '';
+
+		if( !empty( $pParamHash['content_type_guid'] ) ) {
+			$bindVars[] = $pParamHash['content_type_guid'];
+			$joinSql = "INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON (tgc.`content_id`=lc.`content_id` AND lc.`content_type_guid`=?) ";
+		}
+
 		$sort_mode_prefix = 'tg';
 		//Backward compatability for most popular sort method
 		
@@ -473,7 +479,7 @@ class LibertyTag extends LibertyBase {
 			SELECT COUNT( * )
 			FROM `".BIT_DB_PREFIX."tags` tg";
 		$result = $this->mDb->query($query,$bindVars, ( !empty($pParamHash['max_records']) ? $pParamHash['max_records'] : NULL ));
-		$cant = $this->mDb->getOne($query_cant,$bindVars);
+		$cant = $this->mDb->getOne($query_cant);
 		$ret = array();
 
 		while ($res = $result->fetchRow()) {
