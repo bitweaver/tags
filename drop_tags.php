@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_tags/drop_tags.php,v 1.4 2009/10/01 14:17:05 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_tags/drop_tags.php,v 1.5 2010/02/08 21:27:26 wjames5 Exp $
  * @package tags
  * @subpackage functions
  * 
@@ -12,7 +12,7 @@
 /**
  * required setup
  */
-require_once( "../bit_setup_inc.php" );
+require_once( "../kernel/setup_inc.php" );
 require_once( TAGS_PKG_PATH."LibertyTag.php" );
 
 $gBitSystem->verifyPackage( 'tags' );
