@@ -1,6 +1,8 @@
 <?php
 global $gBitSystem, $gBitUser, $gBitThemes;
 
+define( 'LIBERTY_SERVICE_TAGS', 'tags' );
+
 $registerHash = array(
 	'package_name' => 'tags',
 	'package_path' => dirname( __FILE__ ).'/',
