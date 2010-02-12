@@ -23,7 +23,10 @@ if( $gBitSystem->isPackageActive( 'tags' ) && $gBitUser->hasPermission( 'p_tags_
 	);
 	$gBitSystem->registerAppMenu( $menuHash );
 
-	$gLibertySystem->registerService( LIBERTY_SERVICE_TAGS, TAGS_PKG_NAME, array(
+	$gLibertySystem->registerService( 
+		LIBERTY_SERVICE_TAGS, 
+		TAGS_PKG_NAME, 
+		array(
 			'content_display_function' 	=> 'tags_content_display',
 			'content_edit_function' 	=> 'tags_content_edit',
 			'content_list_sql_function' => 'tags_content_list_sql',
@@ -36,6 +39,10 @@ if( $gBitSystem->isPackageActive( 'tags' ) && $gBitUser->hasPermission( 'p_tags_
 			'content_body_tpl'          => 'bitpackage:tags/view_tags_body.tpl',
 			'users_expunge_function'	=> 'tags_user_expunge',
 			'content_search_tpl'		=> 'bitpackage:tags/search_inc.tpl'
-	) );
+		),
+		array( 
+			'description' => tra( 'Enables the addition of tags to any content' ),	
+		)
+	);
 }
 ?>
