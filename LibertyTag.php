@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_tags/LibertyTag.php,v 1.53 2010/01/23 18:20:29 spiderr Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_tags/LibertyTag.php,v 1.54 2010/03/10 19:18:45 spiderr Exp $
  * @package tags
  * 
  * @copyright Copyright (c) 2004-2006, bitweaver.org
@@ -475,11 +475,11 @@ class LibertyTag extends LibertyBase {
 			GROUP BY tg.`tag_id`,tg.`tag`
 			ORDER BY $sort_mode";
 
-		$query_cant = "
+		$queryCount = "
 			SELECT COUNT( * )
 			FROM `".BIT_DB_PREFIX."tags` tg";
-		$result = $this->mDb->query($query,$bindVars, ( !empty($pParamHash['max_records']) ? $pParamHash['max_records'] : NULL ));
-		$cant = $this->mDb->getOne($query_cant);
+		$result = $this->mDb->query( $query,$bindVars, ( !empty($pParamHash['max_records']) ? $pParamHash['max_records'] : NULL ) );
+		$cant = $this->mDb->getOne( $queryCount );
 		$ret = array();
 
 		while ($res = $result->fetchRow()) {
@@ -552,11 +552,11 @@ class LibertyTag extends LibertyBase {
 	* This function gets the number of times a tag is used aka Popularity Count
 	**/
 	function getPopCount($tag_id){
-		$query_cant = "
+		$queryCount = "
 			SELECT COUNT( * )
 			FROM `".BIT_DB_PREFIX."tags_content_map` tgc
 			WHERE tgc.`tag_id` = ?";
-		$cant = $this->mDb->getOne($query_cant, array($tag_id) );
+		$cant = $this->mDb->getOne($queryCount, array($tag_id) );
 		return $cant;
 	}
 

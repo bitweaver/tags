@@ -18,7 +18,7 @@
 						<input type="hidden" name="tag_{$tagData[tag].tag_id}" value="{$tagData[tag].tag}" />
 					{/if}
 
-					<a href="{$tagData[tag].tag_url}" rel="tag">{$tagData[tag].tag}</a>
+					<a href="{$tagData[tag].tag_url|append_url:'content_type_guid':$gContent->mContentTypeGuid}" rel="tag">{$tagData[tag].tag}</a>
 					{if !$smarty.section.tag.last}, {/if}
 				{/section}
 			
