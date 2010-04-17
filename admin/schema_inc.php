@@ -50,4 +50,8 @@ $gBitInstaller->registerUserPermissions( TAGS_PKG_NAME, array(
 	array( 'p_tags_view', 'Can view tags', 'basic', TAGS_PKG_NAME ),
 	array( 'p_tags_moderate', 'Can edit tags', 'editors', TAGS_PKG_NAME ),
 ) );
-?>
+
+// Requirements
+$gBitInstaller->registerRequirements( TAGS_PKG_NAME, array(
+    'liberty' => array( 'min' => '2.1.4' ),
+));
