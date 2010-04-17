@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_tags/admin/admin_tags_inc.php,v 1.7 2009/10/01 14:17:05 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_tags/admin/admin_tags_inc.php,v 1.8 2010/04/17 15:36:08 wjames5 Exp $
 // Copyright (c) 2005 bitweaver Tags
 // All Rights Reserved. See below for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See http://www.gnu.org/copyleft/lesser.html for details.
@@ -108,7 +108,7 @@ $gBitSmarty->assign( 'formTagLists',$formTagLists );
 $exclude = array( 'bituser', 'tikisticky', 'sample', 'bitcomment');
 foreach( $gLibertySystem->mContentTypes as $cType ) {
 	if( !in_array( $cType['content_type_guid'], $exclude ) ) {
-		$formTaggable['guids']['tags_tag_'.$cType['content_type_guid']]  = $cType['content_description'];
+		$formTaggable['guids']['tags_tag_'.$cType['content_type_guid']]  = $gLibertySystem->getContentTypeName( $cType['content_type_guid'] );
 	}
 }
 
