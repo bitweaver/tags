@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_tags/edit.php,v 1.7 2010/02/08 21:27:26 wjames5 Exp $
+ * @version $Header$
  * @package tags
  * @subpackage functions
  * 

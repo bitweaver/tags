@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_tags/LibertyTag.php,v 1.54 2010/03/10 19:18:45 spiderr Exp $
+ * @version $Header$
  * @package tags
  * 
  * @copyright Copyright (c) 2004-2006, bitweaver.org
