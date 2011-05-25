@@ -444,7 +444,7 @@ class LibertyTag extends LibertyBase {
 			'created_desc',
 		);
 
-		if( empty( $pParamHash['sort_mode'] ) || !in_array( $pParamHash['sort_mode'], $sortHash ) ) {
+		if( empty( $pParamHash['sort_mode'] ) || in_array( $pParamHash['sort_mode'], $sortHash ) ) {
 			$pParamHash['sort_mode'] = 'tag_asc';
 		}
 
