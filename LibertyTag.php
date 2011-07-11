@@ -717,9 +717,11 @@ function tags_content_edit( $pObject=NULL ) {
 					}
 				}
 
+				$pObject->setField( 'tags', implode(", ", $tags) );
+
 				$gBitSmarty->assign( 'loadTags', TRUE );
-				$gBitSmarty->assign( 'tagList', !empty( $tags ) ? implode(", ", $tags) : NULL );
-				$gBitSmarty->assign( 'tagData', !empty( $tag->mInfo['tags'] ) ? $tag->mInfo['tags'] : NULL );
+				$gBitSmarty->assign( 'tagList', $pObject->getField( 'tags' ) );
+				$gBitSmarty->assign( 'tagData', $tag->getField( 'tags' ) );
 			}
 		}
 	}
