@@ -10,7 +10,7 @@ $tables = array(
     content_id I4 NOTNULL,
     tagger_id I4 NOTNULL,
     tagged_on I8 NOTNULL
-    CONSTRAINT ', CONSTRAINT `tags_content_map_tag_ref` FOREIGN KEY (`tag_id`) REFERENCES `".BIT_DB_PREFIX."tags` ( `tag_id` )
+    CONSTRAINTS ', CONSTRAINT `tags_content_map_tag_ref` FOREIGN KEY (`tag_id`) REFERENCES `".BIT_DB_PREFIX."tags` ( `tag_id` )
                 , CONSTRAINT `tags_content_map_content_ref` FOREIGN KEY (`content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content` ( `content_id` )
                 , CONSTRAINT `tags_content_map_tagger_id_ref` FOREIGN KEY (`tagger_id`) REFERENCES `".BIT_DB_PREFIX."users_users` ( `user_id` )'
   "
