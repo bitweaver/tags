@@ -735,7 +735,7 @@ function tags_content_store( &$pObject, &$pParamHash ) {
 	if( $gBitUser->hasPermission( 'p_tags_create' ) ) {
 		$errors = NULL;
 		// If a content access system is active, let's call it
-		if( $gBitSystem->isPackageActive( 'tags' ) && isset( $pParamHash['tag_map_store'] ) ) {
+		if( $gBitSystem->isPackageActive( 'tags' ) && isset( $pParamHash['tags'] ) ) {
 			$tag = new LibertyTag( $pObject->mContentId );
 			if( $gBitUser->hasPermission('p_tags_create') ) {
 				$tag->expungeMyContentFromTagMap( $pObject );
