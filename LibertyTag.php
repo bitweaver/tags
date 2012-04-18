@@ -60,7 +60,7 @@ class LibertyTag extends LibertyBase {
 				$ret = array();
 				while ($res = $result->fetchRow()) {
 					//Add tag urls
-					$res['tag_url'] = LibertyTag::getDisplayUrl($res['tag']);
+					$res['tag_url'] = LibertyTag::getDisplayUrlFromHash($res['tag']);
 					
 					$ret[] = $res;
 				}
@@ -85,7 +85,7 @@ class LibertyTag extends LibertyBase {
 
 			if ( $result = $this->mDb->getRow( $query, $bindVars ) ){
 				//Add tag url
-				$result['tag_url'] = LibertyTag::getDisplayUrl($result['tag']);
+				$result['tag_url'] = LibertyTag::getDisplayUrlFromHash($result['tag']);
 					
 				$this->mInfo = $result;
 			};
@@ -485,7 +485,7 @@ class LibertyTag extends LibertyBase {
 		while ($res = $result->fetchRow()) {
 			// this was really sucky, its now replaced by the slightly lesssucky subselect above. the subselect should prolly be replaced with a count table
 //			$res['tag_count'] = $this->getPopCount($res['tag_id']);
-			$res['tag_url'] = LibertyTag::getDisplayUrl($res['tag']);
+			$res['tag_url'] = LibertyTag::getDisplayUrlFromHash($res['tag']);
 			$ret[] = $res;
 		}
 
