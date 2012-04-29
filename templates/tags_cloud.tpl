@@ -7,4 +7,8 @@
 			</li>
 		{/foreach}
 	</ul>
+{else}
+	<div class="norecords">
+		{tr}No tags found{/tr}
+	</div>
 {/if}
