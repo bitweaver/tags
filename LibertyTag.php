@@ -19,8 +19,8 @@ require_once( KERNEL_PKG_PATH.'BitBase.php' );
 class LibertyTag extends LibertyBase {
 	var $mContentId;
 
-	function LibertyTag( $pContentId=NULL ) {
-		LibertyBase::LibertyBase();
+	function __construct( $pContentId=NULL ) {
+		parent::__construct();
 		$this->mContentId = $pContentId;
 	}
 
