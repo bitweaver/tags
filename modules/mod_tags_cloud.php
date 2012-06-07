@@ -9,7 +9,6 @@
  * required setup
  */
 require_once( TAGS_PKG_PATH."LibertyTag.php" );
-require_once( USERS_PKG_PATH.'BitUser.php' );
 
 // moduleParams contains lots of goodies: extract for easier handling
 extract( $moduleParams );
