@@ -20,7 +20,7 @@ if( isset($_REQUEST['tags']) ){
 		$pageTitle .= ' '.tra( 'with' ).' '.$_REQUEST['tags'];
 		$gBitSystem->setCanonicalLink( $tag->getDisplayUriWithTag( $_REQUEST['tags'] ) );
 	} else {
-		$gBitSystem->setHttpStatus( HttpStatusCodes::HTTP_NOT_FOUND );
+		$gBitSystem->setHttpStatus( HttpStatusCodes::HTTP_GONE );
 	}
 	$tagData = $tag->getList( $tagHash );
 	$gBitSmarty->assign( 'tagData', $tagData["data"] );
