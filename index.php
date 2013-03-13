@@ -15,15 +15,20 @@ $tagHash = $_REQUEST;
 $gBitSmarty->assign( 'cloud', TRUE );
 
 if( isset($_REQUEST['tags']) ){
-	$listData = $tag->assignContentList( $listHash );
+	$pageTitle = tra( 'Tagged Content' );
+	if( $listData = $tag->assignContentList( $listHash ) ) {
+		$pageTitle .= ' '.tra( 'with' ).' '.$_REQUEST['tags'];
+		$gBitSystem->setCanonicalLink( $tag->getDisplayUriWithTag( $_REQUEST['tags'] ) );
+	} else {
+		$gBitSystem->setHttpStatus( HttpStatusCodes::HTTP_NOT_FOUND );
+	}
 	$tagData = $tag->getList( $tagHash );
 	$gBitSmarty->assign( 'tagData', $tagData["data"] );
 	$gBitSmarty->assign( 'tagsReq', $_REQUEST['tags'] );
-	$gBitSystem->display( 'bitpackage:tags/list_content.tpl', tra( 'Tagged Content' ) , array( 'display_mode' => 'display' ));
+	$gBitSystem->display( 'bitpackage:tags/list_content.tpl', $pageTitle, array( 'display_mode' => 'display' ));
 }else{
 	$listData = $tag->getList( $listHash );
 	$gBitSmarty->assign( 'tagData', $listData["data"] );
 	$gBitSystem->display( 'bitpackage:tags/list_tags.tpl', tra( 'Tags' ) , array( 'display_mode' => 'display' ));
 	
 }
-?>

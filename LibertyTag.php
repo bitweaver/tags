@@ -387,6 +387,10 @@ class LibertyTag extends LibertyBase {
 		}
 	}
 	
+	function getDisplayUriWithTag( $tag ) {
+		return BIT_BASE_URI.$this->getDisplayUrlWithTag( $tag );
+	}
+
 	function getDisplayUrlWithTag($tag){
 		global $gBitSystem;
 		if( $gBitSystem->isFeatureActive( 'pretty_urls' ) || $gBitSystem->isFeatureActive( 'pretty_urls_extended' ) ) {
@@ -594,6 +598,7 @@ class LibertyTag extends LibertyBase {
 			$distinctdata = array_merge($distinctdata);
 		}
 		$gBitSmarty->assign_by_ref('contentList', $distinctdata);
+		return $contentList;
 	}
 
 

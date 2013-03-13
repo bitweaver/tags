@@ -5,16 +5,16 @@
 	</div>
 
 	<div class="body">
-		{form legend="Search Content by Tags"}
-			<input type="hidden" name="user_id" value="{$user_id}" />
-			<div class="row">
-				{formlabel label="Enter Tags" for="search_tags"}
-				{forminput}
-					<input type="text" name="tags" id="search_tags" value="{$listInfo.tags}" />
-					<input type="submit" value="{tr}Search{/tr}" name="search_objects" />
-				{/forminput}
-			</div>
+		{strip}
+		{form class="minifind" legend='find in entries' method="get" action="`$smarty.server.SCRIPT_NAME`?`$hidden|@http_build_query`"}
+			{biticon ipackage="icons" iname="edit-find" iexplain="Search"}
+			<input type="text" name="tags" value="{$smarty.request.tags|default:"Search Content by Tags"|escape}" {if $prompt}onclick="if (this.value == '{$prompt}') this.value = '';"{/if}/>&nbsp;
+			<input type="submit" name="search" value="{tr}Find{/tr}" />&nbsp;
+			{if $smarty.request.find}
+			<input type="button" onclick="location.href='{$smarty.server.SCRIPT_NAME}{if $hidden}?{/if}{foreach from=$hidden item=value key=name}{$name}={$value}&amp;{/foreach}'" value="{tr}Reset{/tr}" />
+			{/if}
 		{/form}
+		{/strip}
 
 		{* assign the correct sort columns for user name sorting *}
 		{if $gBitSystem->getConfig( 'users_display_name' ) eq 'login'}
@@ -26,37 +26,39 @@
 		{/if}
 
 		<table class="data">
-			<caption>{tr}Available Content{/tr} <span class="total">[ {$listInfo.total_records} ]</span></caption>
+		{if $contentList}
+			<caption>{tr}Available Content{/tr} <span class="total">[ {$listInfo.listInfo.total_records} ]</span></caption>
 			<thead>
 				<tr>
 					{if $gBitSystem->isFeatureActive( 'tags_list_id' )}
-						<th style="width:2%;">{smartlink ititle="ID" tags=$tagsReq isort=content_id list_page=$listInfo.current_page user_id=$user_id content_type_guid=$contentSelect find=$listInfo.find}</th>
+						<th style="width:2%;">{smartlink ititle="ID" tags=$tagsReq isort=content_id list_page=$listInfo.listInfo.current_page user_id=$user_id content_type_guid=$contentSelect find=$listInfo.listInfo.find}</th>
 					{/if}
 					{if $gBitSystem->isFeatureActive( 'tags_list_title' )}
-						<th>{smartlink ititle="Title" tags=$tagsReq isort=title list_page=$listInfo.current_page user_id=$user_id content_type_guid=$contentSelect find=$listInfo.find idefault=1}</th>
+						<th>{smartlink ititle="Title" tags=$tagsReq isort=title list_page=$listInfo.listInfo.current_page user_id=$user_id content_type_guid=$contentSelect find=$listInfo.listInfo.find idefault=1}</th>
 					{/if}
 					{if $gBitSystem->isFeatureActive( 'tags_list_type' )}
-						<th>{smartlink ititle="Content Type" tags=$tagsReq isort=content_type_guid list_page=$listInfo.current_page user_id=$user_id content_type_guid=$contentSelect find=$listInfo.find}</th>
+						<th>{smartlink ititle="Content Type" tags=$tagsReq isort=content_type_guid list_page=$listInfo.listInfo.current_page user_id=$user_id content_type_guid=$contentSelect find=$listInfo.listInfo.find}</th>
 					{/if}
 					{if $gBitSystem->isFeatureActive( 'tags_list_author' )}
-						<th>{smartlink ititle="Author" tags=$tagsReq isort=$isort_author list_page=$listInfo.current_page user_id=$user_id content_type_guid=$contentSelect find=$listInfo.find}</th>
+						<th>{smartlink ititle="Author" tags=$tagsReq isort=$isort_author list_page=$listInfo.listInfo.current_page user_id=$user_id content_type_guid=$contentSelect find=$listInfo.listInfo.find}</th>
 					{/if}
 					{if $gBitSystem->isFeatureActive( 'tags_list_editor' )}
-						<th>{smartlink ititle="Most recent editor" tags=$tagsReq isort=$isort_editor list_page=$listInfo.current_page user_id=$user_id content_type_guid=$contentSelect find=$listInfo.find}</th>
+						<th>{smartlink ititle="Most recent editor" tags=$tagsReq isort=$isort_editor list_page=$listInfo.listInfo.current_page user_id=$user_id content_type_guid=$contentSelect find=$listInfo.listInfo.find}</th>
 					{/if}
 					{if $gBitSystem->isFeatureActive( 'tags_list_lastmodif' )}
-						<th>{smartlink ititle="Last Modified" tags=$tagsReq isort=last_modified list_page=$listInfo.current_page user_id=$user_id content_type_guid=$content_type_guids find=$listInfo.find}</th>
+						<th>{smartlink ititle="Last Modified" tags=$tagsReq isort=last_modified list_page=$listInfo.listInfo.current_page user_id=$user_id content_type_guid=$content_type_guids find=$listInfo.listInfo.find}</th>
 					{/if}
 					{if $gBitSystem->isFeatureActive( 'tags_list_ip' )}
-						<th>{smartlink ititle="IP" tags=$tagsReq isort=ip list_page=$listInfo.current_page user_id=$user_id content_type_guid=$contentSelect find=$listInfo.find}</th>				
+						<th>{smartlink ititle="IP" tags=$tagsReq isort=ip list_page=$listInfo.listInfo.current_page user_id=$user_id content_type_guid=$contentSelect find=$listInfo.listInfo.find}</th>				
 					{/if}
 				</tr>
 			</thead>
+		{/if}
 			<tbody>
 				{foreach from=$contentList item=item}
 					<tr class="{cycle values='odd,even'}">
 						{if $gBitSystem->isFeatureActive( 'tags_list_id' )}
-							<td style="text-align:right;">{$item.content_id}</td>
+							<td class="alignright">{$item.content_id}</td>
 						{/if}
 						{if $gBitSystem->isFeatureActive( 'tags_list_title' )}
 							<td>{$item.display_link}</td>
@@ -68,24 +70,29 @@
 							<td>{displayname real_name=$item.creator_real_name user=$item.creator_user}</td>
 						{/if}
 						{if $gBitSystem->isFeatureActive( 'tags_list_editor' )}
-							<td style="text-align:left;">{displayname real_name=$item.modifier_real_name user=$item.modifier_user}</td>
+							<td class="alignleft">{displayname real_name=$item.modifier_real_name user=$item.modifier_user}</td>
 						{/if}
 						{if $gBitSystem->isFeatureActive( 'tags_list_lastmodif' )}
-							<td style="text-align:center;">{$item.last_modified|bit_short_date}</td>
+							<td class="aligncenter">{$item.last_modified|bit_short_date}</td>
 						{/if}
 						{if $gBitSystem->isFeatureActive( 'tags_list_ip' )}
-							<td style="text-align:center;">{$item.ip}</td>
+							<td class="aligncenter">{$item.ip}</td>
 						{/if}
+					</tr>
+				{foreachelse}
+					<tr>
+						<td>{tr}0 results{/tr}<td>
 					</tr>
 				{/foreach}
 			</tbody>
 		</table>
 
+
 		{pagination tags=$tagsReq}
 	</div><!-- end .body -->
 	
 	<div class="header">
-		<h1>{tr}Tags{/tr}</h1>
+		<h2>{tr}Tags{/tr}</h2>
 	</div>
 
 	<div class="body">
