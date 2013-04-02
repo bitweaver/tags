@@ -10,7 +10,7 @@
 		{if $cloud}
 			<div class="navbar">
 				<ul>
-					<li>{biticon ipackage="icons" iname="emblem-symbolic-link" iexplain="Sort by"}</li>
+					<li>{booticon iname="icon-circle-arrow-right"  ipackage="icons"  iexplain="Sort by"}</li>
 					<li><a href="{$smarty.const.TAGS_PKG_URL}index.php?sort=mostpopular">Popularity</a></li>
 					<li><a href="{$smarty.const.TAGS_PKG_URL}index.php">Alphabeticaly</a></li>
 				</ul>
