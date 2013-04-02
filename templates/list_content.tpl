@@ -7,7 +7,7 @@
 	<div class="body">
 		{strip}
 		{form class="minifind" legend='find in entries' method="get" action="`$smarty.server.SCRIPT_NAME`?`$hidden|@http_build_query`"}
-			{biticon ipackage="icons" iname="edit-find" iexplain="Search"}
+			{booticon iname="icon-search"  ipackage="icons"  iexplain="Search"}
 			<input type="text" name="tags" value="{$smarty.request.tags|default:"Search Content by Tags"|escape}" {if $prompt}onclick="if (this.value == '{$prompt}') this.value = '';"{/if}/>&nbsp;
 			<input type="submit" name="search" value="{tr}Find{/tr}" />&nbsp;
 			{if $smarty.request.find}
