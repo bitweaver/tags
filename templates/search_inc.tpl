@@ -1,4 +1,4 @@
-<div class="row">
+<div class="control-group">
 	{formlabel label="Tags:" for="tags"}
 	{forminput}
 		<input type="text" name="tags" id="search_tags" value="{$listInfo.tags}" />

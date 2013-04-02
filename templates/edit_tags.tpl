@@ -2,7 +2,7 @@
 
 {if $gContent->mContentTypeGuid != 'bitcomment' || $gBitSystem->isFeatureActive('tags_on_comments')}
 
-	<div class="row">
+	<div class="control-group">
 		{formlabel label="Tags" for="tags"}
 		{forminput}
 			<input type="text" name="tags" id="tags" value="{if $preview}{$smarty.post.tags}{elseif $tagList}{$tagList}{/if}" />
