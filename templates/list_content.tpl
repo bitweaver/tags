@@ -9,7 +9,7 @@
 		{form class="minifind" legend='find in entries' method="get" action="`$smarty.server.SCRIPT_NAME`?`$hidden|@http_build_query`"}
 			{booticon iname="icon-search"  ipackage="icons"  iexplain="Search"}
 			<input type="text" name="tags" value="{$smarty.request.tags|default:"Search Content by Tags"|escape}" {if $prompt}onclick="if (this.value == '{$prompt}') this.value = '';"{/if}/>&nbsp;
-			<input type="submit" name="search" value="{tr}Find{/tr}" />&nbsp;
+			<input type="submit" class="btn" name="search" value="{tr}Find{/tr}" />&nbsp;
 			{if $smarty.request.find}
 			<input type="button" onclick="location.href='{$smarty.server.SCRIPT_NAME}{if $hidden}?{/if}{foreach from=$hidden item=value key=name}{$name}={$value}&amp;{/foreach}'" value="{tr}Reset{/tr}" />
 			{/if}

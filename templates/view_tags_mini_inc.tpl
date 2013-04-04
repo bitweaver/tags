@@ -26,7 +26,7 @@
 
 			{if $gContent->isOwner() || $gBitUser->hasPermission('p_tags_admin')}
 				&nbsp;
-				<input type="submit" name="drop_tags" value="{tr}Drop selected{/tr}" />
+				<input type="submit" class="btn" name="drop_tags" value="{tr}Drop selected{/tr}" />
 			{/if}
 
 		{/form}

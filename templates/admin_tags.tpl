@@ -96,7 +96,7 @@
 
 	{/jstabs}
 	<div class="control-group submit">
-		<input type="submit" name="tags_preferences" value="{tr}Change preferences{/tr}" />
+		<input type="submit" class="btn" name="tags_preferences" value="{tr}Change preferences{/tr}" />
 	</div>
 {/form}
 {/strip}
