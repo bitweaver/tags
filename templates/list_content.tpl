@@ -64,7 +64,7 @@
 							<td>{$item.display_link}</td>
 						{/if}
 						{if $gBitSystem->isFeatureActive( 'tags_list_type' )}
-							<td>{assign var=content_type_guid value=`$item.content_type_guid`}{$contentTypes.$content_type_guid}</td>
+							<td>{assign var=content_type_guid value=$item.content_type_guid}{$contentTypes.$content_type_guid}</td>
 						{/if}
 						{if $gBitSystem->isFeatureActive( 'tags_list_author' )}
 							<td>{displayname real_name=$item.creator_real_name user=$item.creator_user}</td>
