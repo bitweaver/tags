@@ -1,5 +1,5 @@
 {strip}
-<table class="data">
+<table class="table data">
 	<tr>
 		<th style="width:80%;">{tr}Tag{/tr}</th>
 		<th style="width:10%;">{tr}Use Count{/tr}</th>

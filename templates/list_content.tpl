@@ -25,7 +25,7 @@
 			{assign var=isort_editor value=modifier_real_name}
 		{/if}
 
-		<table class="data">
+		<table class="table data">
 		{if $contentList}
 			<caption>{tr}Available Content{/tr} <span class="total">[ {$listInfo.listInfo.total_records} ]</span></caption>
 			<thead>
