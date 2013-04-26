@@ -419,37 +419,19 @@ class LibertyTag extends LibertyBase {
 		$sort_mode_prefix = 'tg';
 		//Backward compatability for most popular sort method
 		
-		if ( (isset($pParamHash['sort']) && $pParamHash['sort']=='mostpopular') ) {
-			$pParamHash['sort_mode'] = 'tag_count_desc';
-		}else if( empty( $pParamHash['sort_mode'] ) ) {
+		if( empty( $pParamHash['sort_mode'] ) ) {
 			$pParamHash['sort_mode'] = 'tag_asc';
-		}	
-
-		$sortHash = array(
-			'content_id_desc',
-			'content_id_asc',
-			'modifier_user_desc',
-			'modifier_user_asc',
-			'modifier_real_name_desc',
-			'modifier_real_name_asc',
-			'creator_user_desc',
-			'creator_user_asc',
-			'creator_real_name_desc',
-			'creator_real_name_asc',
-			'title_asc',
-			'title_desc',
-			'content_type_guid_asc',
-			'content_type_guid_desc',
-			'ip_asc',
-			'ip_desc',
-			'last_modified_asc',
-			'last_modified_desc',
-			'created_asc',
-			'created_desc',
-		);
-
-		if( empty( $pParamHash['sort_mode'] ) || in_array( $pParamHash['sort_mode'], $sortHash ) ) {
-			$pParamHash['sort_mode'] = 'tag_asc';
+		} else {
+			switch( $pParamHash['sort_mode'] ) {
+				case 'tag_asc':
+				case 'tag_desc':
+				case 'tag_count_desc':
+				case 'tag_count_asc':
+					break;
+				default:
+					$pParamHash['sort_mode'] = 'tag_asc';
+					break;
+			}
 		}
 
 		/**
@@ -471,18 +453,15 @@ class LibertyTag extends LibertyBase {
 		$sort_mode = $this->mDb->convertSortmode( $pParamHash['sort_mode'] );
 
 		// get all tags
-		$query = "
-			SELECT tg.`tag_id`, tg.`tag`, COUNT(tgc.`content_id`) AS tag_count
-			FROM `".BIT_DB_PREFIX."tags` tg
-				 INNER JOIN `".BIT_DB_PREFIX."tags_content_map` tgc ON ( tgc.`tag_id` = tg.`tag_id` ) 
-			$joinSql
-			GROUP BY tg.`tag_id`,tg.`tag`
-			ORDER BY $sort_mode";
-
-		$queryCount = "
-			SELECT COUNT( * )
-			FROM `".BIT_DB_PREFIX."tags` tg";
+		$query = "SELECT tg.`tag_id`, tg.`tag`, COUNT(tgc.`content_id`) AS tag_count
+				FROM `".BIT_DB_PREFIX."tags` tg
+					 INNER JOIN `".BIT_DB_PREFIX."tags_content_map` tgc ON ( tgc.`tag_id` = tg.`tag_id` ) 
+				$joinSql
+				GROUP BY tg.`tag_id`,tg.`tag`
+				ORDER BY $sort_mode";
 		$result = $this->mDb->query( $query,$bindVars, ( !empty($pParamHash['max_records']) ? $pParamHash['max_records'] : NULL ) );
+
+		$queryCount = "SELECT COUNT( * ) FROM `".BIT_DB_PREFIX."tags` tg";
 		$cant = $this->mDb->getOne( $queryCount );
 		$ret = array();
 
