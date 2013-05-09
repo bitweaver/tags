@@ -1,7 +1,7 @@
 {strip}
 {if count($tagData) > 0 && $gBitUser->hasPermission('p_tags_view')}
 	<div class="display tags">
-		{form ipackage=tags ifile=drop_tags.php}
+		{form ipackage=tags ifile="drop_tags.php"}
 			<input type="hidden" name="content_id" value="{$gContent->mContentId}" />
 
 			<strong>{tr}Tags:{/tr}</strong>
@@ -26,7 +26,7 @@
 
 			{if $gContent->isOwner() || $gBitUser->hasPermission('p_tags_admin')}
 				&nbsp;
-				<input type="submit" name="drop_tags" value="{tr}Drop selected{/tr}" />
+				<input type="submit" class="btn" name="drop_tags" value="{tr}Drop selected{/tr}" />
 			{/if}
 
 		{/form}

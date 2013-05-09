@@ -15,15 +15,15 @@
 			<input type="hidden" name="tag_id" value="{if $tagData}{$tagData.tag_id}{/if}" />
 
 			{legend legend="Edit Tag"}
-				<div class="row">
+				<div class="control-group">
 					{formlabel label="Tag" for="tag"}
 					{forminput}
 						<input type="text" name="tag" id="tag" value="{if $tagData}{$tagData.tag}{/if}" />
 					{/forminput}
 				</div>
 
-				<div class="row submit">
-					<input type="submit" name="save" value="{tr}Save{/tr}" />
+				<div class="control-group submit">
+					<input type="submit" class="btn" name="save" value="{tr}Save{/tr}" />
 				</div>
 			{/legend}
 		{/form}

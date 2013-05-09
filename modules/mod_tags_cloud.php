@@ -26,5 +26,5 @@ $listHash = array(
 $tag = new LibertyTag();
 
 $listData = $tag->getList( $listHash );
-$gBitSmarty->assign( 'modTagData', $listData["data"] );
+$_template->tpl_vars['modTagData'] = new Smarty_variable( $listData["data"] );
 ?>

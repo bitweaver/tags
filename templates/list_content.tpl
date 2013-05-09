@@ -7,9 +7,9 @@
 	<div class="body">
 		{strip}
 		{form class="minifind" legend='find in entries' method="get" action="`$smarty.server.SCRIPT_NAME`?`$hidden|@http_build_query`"}
-			{biticon ipackage="icons" iname="edit-find" iexplain="Search"}
+			{booticon iname="icon-search"  ipackage="icons"  iexplain="Search"}
 			<input type="text" name="tags" value="{$smarty.request.tags|default:"Search Content by Tags"|escape}" {if $prompt}onclick="if (this.value == '{$prompt}') this.value = '';"{/if}/>&nbsp;
-			<input type="submit" name="search" value="{tr}Find{/tr}" />&nbsp;
+			<input type="submit" class="btn" name="search" value="{tr}Find{/tr}" />&nbsp;
 			{if $smarty.request.find}
 			<input type="button" onclick="location.href='{$smarty.server.SCRIPT_NAME}{if $hidden}?{/if}{foreach from=$hidden item=value key=name}{$name}={$value}&amp;{/foreach}'" value="{tr}Reset{/tr}" />
 			{/if}
@@ -25,7 +25,7 @@
 			{assign var=isort_editor value=modifier_real_name}
 		{/if}
 
-		<table class="data">
+		<table class="table data">
 		{if $contentList}
 			<caption>{tr}Available Content{/tr} <span class="total">[ {$listInfo.listInfo.total_records} ]</span></caption>
 			<thead>
@@ -64,7 +64,7 @@
 							<td>{$item.display_link}</td>
 						{/if}
 						{if $gBitSystem->isFeatureActive( 'tags_list_type' )}
-							<td>{assign var=content_type_guid value=`$item.content_type_guid`}{$contentTypes.$content_type_guid}</td>
+							<td>{assign var=content_type_guid value=$item.content_type_guid}{$contentTypes.$content_type_guid}</td>
 						{/if}
 						{if $gBitSystem->isFeatureActive( 'tags_list_author' )}
 							<td>{displayname real_name=$item.creator_real_name user=$item.creator_user}</td>
