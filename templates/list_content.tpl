@@ -1,20 +1,21 @@
 {strip}
 <div class="listing liberty">
-	<div class="header">
-		<h1>{tr}Tagged Content Listing{/tr}</h1>
-	</div>
-
-	<div class="body">
-		{strip}
-		{form class="minifind" legend='find in entries' method="get" action="`$smarty.server.SCRIPT_NAME`?`$hidden|@http_build_query`"}
-			{booticon iname="icon-search"  ipackage="icons"  iexplain="Search"}
-			<input type="text" name="tags" value="{$smarty.request.tags|default:"Search Content by Tags"|escape}" {if $prompt}onclick="if (this.value == '{$prompt}') this.value = '';"{/if}/>&nbsp;
-			<input type="submit" class="btn" name="search" value="{tr}Find{/tr}" />&nbsp;
-			{if $smarty.request.find}
-			<input type="button" onclick="location.href='{$smarty.server.SCRIPT_NAME}{if $hidden}?{/if}{foreach from=$hidden item=value key=name}{$name}={$value}&amp;{/foreach}'" value="{tr}Reset{/tr}" />
-			{/if}
+	<header>
+		<div class="floaticon">
+		{if $hidden}
+			{assign var=actionParams value=$hidden|http_build_query}
+		{/if}
+		{form class="form-search" method="get" action="`$smarty.server.SCRIPT_NAME`?`$actionParams`"}
+			<div class="input-append">
+				<input type="text" class="search-query input-medium" placeholder="{tr}Search content by tags&hellip;{/tr}">
+				<button type="submit" class="btn"><i class="icon-search"></i> {tr}Search{/tr}</button>
+			</div>
 		{/form}
-		{/strip}
+		</div>
+		<h1>{tr}Tagged Content Listing{/tr}</h1>
+	</header>
+
+	<section class="body">
 
 		{* assign the correct sort columns for user name sorting *}
 		{if $gBitSystem->getConfig( 'users_display_name' ) eq 'login'}
@@ -89,19 +90,19 @@
 
 
 		{pagination tags=$tagsReq}
-	</div><!-- end .body -->
+	</section><!-- end .body -->
 	
-	<div class="header">
+	<header>
 		<h2>{tr}Tags{/tr}</h2>
-	</div>
+	</header>
 
-	<div class="body">
+	<section class="body">
 		{if $cloud}
 			{include file="bitpackage:tags/tags_cloud.tpl"}
 		{else}
 			{include file="bitpackage:tags/tags_list.tpl"}
 		{/if}
-	</div><!-- end .body -->
+	</section><!-- end .body -->
 	
 </div><!-- end .liberty -->
 {/strip}
