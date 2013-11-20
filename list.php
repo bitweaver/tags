@@ -57,7 +57,7 @@ if( isset($_REQUEST['tags']) ){
 	$pageTitle = tra( 'Tagged Content' );
 	if( $listData = $tag->assignContentList( $listHash ) ) {
 		$pageTitle .= ' '.tra( 'with' ).' '.$_REQUEST['tags'];
-		$gBitSystem->setCanonicalLink( $tag->getDisplayUriWithTag( $_REQUEST['tags'] ) );
+		$gBitSystem->setCanonicalLink( $tag->getDisplayUrlWithTag( $_REQUEST['tags'] ) );
 	} else {
 		$gBitSystem->setHttpStatus( HttpStatusCodes::HTTP_GONE );
 	}
