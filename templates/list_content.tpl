@@ -8,7 +8,7 @@
 		{form class="form-search" method="get" action="`$smarty.server.SCRIPT_NAME`?`$actionParams`"}
 			<div class="input-append">
 				<input type="text" class="search-query input-medium" placeholder="{tr}Search content by tags&hellip;{/tr}">
-				<button type="submit" class="btn"><i class="icon-search"></i> {tr}Search{/tr}</button>
+				<button type="submit" class="btn btn-default"><i class="icon-search"></i> {tr}Search{/tr}</button>
 			</div>
 		{/form}
 		</div>
