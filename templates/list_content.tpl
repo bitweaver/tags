@@ -74,10 +74,10 @@
 							<td class="alignleft">{displayname real_name=$item.modifier_real_name user=$item.modifier_user}</td>
 						{/if}
 						{if $gBitSystem->isFeatureActive( 'tags_list_lastmodif' )}
-							<td class="aligncenter">{$item.last_modified|bit_short_date}</td>
+							<td class="content-center">{$item.last_modified|bit_short_date}</td>
 						{/if}
 						{if $gBitSystem->isFeatureActive( 'tags_list_ip' )}
-							<td class="aligncenter">{$item.ip}</td>
+							<td class="content-center">{$item.ip}</td>
 						{/if}
 					</tr>
 				{foreachelse}
