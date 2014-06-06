@@ -7,7 +7,7 @@
 			{legend legend="Display Location"}
 				<input type="hidden" name="page" value="{$page}" />
 				{foreach from=$formTagsDisplayOptions key=item item=output}
-					<div class="control-group">
+					<div class="form-group">
 						{formlabel label=$output.label for=$item}
 						{forminput}
 							{if $output.type == 'numeric'}
@@ -24,7 +24,7 @@
 			{/legend}
 			
 			{legend legend="Availability"}
-				<div class="control-group">
+				<div class="form-group">
 					{formlabel label="Taggable Content"}
 					{forminput}
 						{formhelp note="Enabled content types can be tagged by users with appropriate permissions."}
@@ -38,7 +38,7 @@
 		{legend legend="Santitation Settings"}
 			<input type="hidden" name="page" value="{$page}" />
 			{foreach from=$formTagsStripOptions key=item item=output}
-				<div class="control-group">
+				<div class="form-group">
 					{formlabel label=$output.label for=$item}
 					{forminput}
 						{if $output.type == 'numeric'}
@@ -59,7 +59,7 @@
 		{legend legend="Other Settings"}
 			<input type="hidden" name="page" value="{$page}" />
 			{foreach from=$formTagsOtherOptions key=item item=output}
-				<div class="control-group">
+				<div class="form-group">
 					{formlabel label=$output.label for=$item}
 					{forminput}
 						{if $output.type == 'numeric'}
@@ -81,7 +81,7 @@
 			<input type="hidden" name="page" value="{$page}" />
 
 			{foreach from=$formTagLists key=item item=output}
-				<div class="control-group">
+				<div class="form-group">
 					{formlabel label=$output.label for=$item}
 					{forminput}
 						{html_checkboxes name="$item" values="y" checked=$gBitSystem->getConfig($item) labels=false id=$item}
@@ -95,8 +95,8 @@
 
 
 	{/jstabs}
-	<div class="control-group submit">
-		<input type="submit" class="btn" name="tags_preferences" value="{tr}Change preferences{/tr}" />
+	<div class="form-group submit">
+		<input type="submit" class="btn btn-default" name="tags_preferences" value="{tr}Change preferences{/tr}" />
 	</div>
 {/form}
 {/strip}

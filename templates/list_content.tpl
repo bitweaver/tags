@@ -8,7 +8,7 @@
 		{form class="form-search" method="get" action="`$smarty.server.SCRIPT_NAME`?`$actionParams`"}
 			<div class="input-append">
 				<input type="text" class="search-query input-medium" placeholder="{tr}Search content by tags&hellip;{/tr}">
-				<button type="submit" class="btn"><i class="icon-search"></i> {tr}Search{/tr}</button>
+				<button type="submit" class="btn btn-default"><i class="icon-search"></i> {tr}Search{/tr}</button>
 			</div>
 		{/form}
 		</div>
@@ -74,10 +74,10 @@
 							<td class="alignleft">{displayname real_name=$item.modifier_real_name user=$item.modifier_user}</td>
 						{/if}
 						{if $gBitSystem->isFeatureActive( 'tags_list_lastmodif' )}
-							<td class="aligncenter">{$item.last_modified|bit_short_date}</td>
+							<td class="content-center">{$item.last_modified|bit_short_date}</td>
 						{/if}
 						{if $gBitSystem->isFeatureActive( 'tags_list_ip' )}
-							<td class="aligncenter">{$item.ip}</td>
+							<td class="content-center">{$item.ip}</td>
 						{/if}
 					</tr>
 				{foreachelse}
