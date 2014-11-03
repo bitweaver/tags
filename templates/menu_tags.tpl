@@ -1,5 +1,5 @@
 {strip}
-<ul class="dropdown-menu">
+<ul class="{$packageMenuClass}">
 	{if $gBitUser->hasPermission('p_tags_view')}
 		<li><a class="item" href="{$smarty.const.TAGS_PKG_URL}index.php">{booticon iname="icon-tags" iexplain="Tag Cloud" ilocation=menu}</a></li>
 	{/if}
