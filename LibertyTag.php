@@ -576,7 +576,7 @@ class LibertyTag extends LibertyBase {
 			$distinctdata = $this->array_distinct( $contentList, 'content_id' );
 			$distinctdata = array_merge($distinctdata);
 		}
-		$gBitSmarty->assign_by_ref('contentList', $distinctdata);
+		$gBitSmarty->assignByRef('contentList', $distinctdata);
 		return $contentList;
 	}
 
