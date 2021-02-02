@@ -8,7 +8,7 @@
 /**
  * required setup
  */
-require_once( TAGS_PKG_PATH."LibertyTag.php" );
+require_once( TAGS_PKG_CLASS_PATH.'LibertyTag.php' );
 
 // moduleParams contains lots of goodies: extract for easier handling
 extract( $moduleParams );

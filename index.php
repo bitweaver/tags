@@ -1,6 +1,6 @@
 <?php
 require_once( "../kernel/setup_inc.php" );
-require_once( TAGS_PKG_PATH."LibertyTag.php" );
+require_once( TAGS_PKG_CLASS_PATH.'LibertyTag.php' );
 
 $gBitSystem->verifyPackage( 'tags' );
 

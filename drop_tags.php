@@ -13,11 +13,11 @@
  * required setup
  */
 require_once( "../kernel/setup_inc.php" );
-require_once( TAGS_PKG_PATH."LibertyTag.php" );
+require_once( TAGS_PKG_CLASS_PATH.'LibertyTag.php' );
 
 $gBitSystem->verifyPackage( 'tags' );
 
-require_once( LIBERTY_PKG_PATH.'lookup_content_inc.php' );
+require_once( LIBERTY_PKG_INCLUDE_PATH.'lookup_content_inc.php' );
 
 if (!$gContent || !$gContent->isValid()) {
 	$gBitSystem->fatalError( 'The content is not valid.' );

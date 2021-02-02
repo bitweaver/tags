@@ -14,7 +14,7 @@ if( $gBitSystem->isPackageActive( 'tags' ) && $gBitUser->hasPermission( 'p_tags_
 	// load css file
 	$gBitThemes->loadCss( TAGS_PKG_PATH.'templates/tags.css' );
 
-	require_once( TAGS_PKG_PATH.'LibertyTag.php' );
+	require_once( TAGS_PKG_CLASS_PATH.'LibertyTag.php' );
 
 	$menuHash = array(
 		'package_name'  => TAGS_PKG_NAME,
