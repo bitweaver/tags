@@ -5,7 +5,7 @@ define( 'LIBERTY_SERVICE_TAGS', 'tags' );
 
 $registerHash = array(
 	'package_name' => 'tags',
-	'package_path' => dirname( __FILE__ ).'/',
+	'package_path' => dirname( dirname( __FILE__ ) ).'/',
 	'service' => LIBERTY_SERVICE_TAGS,
 );
 $gBitSystem->registerPackage( $registerHash );
